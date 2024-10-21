@@ -4,18 +4,6 @@ const app = express();
 const port = 5000;
 var fs = require("fs");
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "uploads/");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.originalname);
-//   },
-// });
-
-// const upload = multer({ storage });
-
-// import { PushMyJsonFile, ReadMyFile } from './functions.js';
 const MyFunctions = require("./functions.js");
 
 app.use(cors());
@@ -36,7 +24,7 @@ const middle = express.urlencoded({
 app.post("/form/upload", middle, (req, res) => {
   var newObj = JSON.parse(JSON.stringify(req.body));
   var path = "uploads/array.json";
-  PushMyJsonFile(path, newObj);
+  MyFunctions.PushMyJsonFile(path, newObj);
 });
 
 app.get("/form", (req, res) => {
