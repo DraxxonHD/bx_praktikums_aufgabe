@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Form</title>
+  </head>
+  <body>
+    <h1>Welcome to My Form</h1>
+    <form>
+      <label for="myName">Send me your name:</label>
+      <input id="myName" name="name" value="Alex" />
+      <br />
+      <label for="userId">your id:</label>
+      <input id="userId" name="id" value="123" />
+      <br />
+      <label for="myJob">your name:</label>
+      <input id="myJob" name="job" value="Web Dev" />
+      <br />
+      <!-- <input type="file" name="file"> -->
+      <br />
+      <input id="postSubmit" type="submit" value="Send Me!" />
+    </form>
+  </body>
+  <script>
+    const form = document.querySelector("form");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const fd = new FormData(form);
+
+      const urlEncoded = new URLSearchParams(fd).toString();
+
+      fetch("http://localhost:5000/form/upload", {
+        method: "POST",
+        body: urlEncoded,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+    });
+  </script>
+</html>
