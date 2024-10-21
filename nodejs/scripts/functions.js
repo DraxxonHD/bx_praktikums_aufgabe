@@ -4,9 +4,10 @@ exports.PushMyJsonFile = function(path, newObj)
 {
     fs.readFile(path, (err, data) => 
       {
-        if (err && err.code === "ENOENT") 
+        if (err && err.code === 'ENOENT') 
           {
-          return fs.writeFile(path, "[" + JSON.stringify(newObj) + "]", (err) => {if (err) console.log(err);});
+            fs.mkdir(path.substring(0, path.lastIndexOf("/")), { recursive: true }, (err) => {if (err) console.log(err);});
+            return fs.writeFile(path, "[" + JSON.stringify(newObj) + "]", (err) => {if (err) console.log(err);});
           } 
         else if (err) console.log(err);
         else 
@@ -16,7 +17,7 @@ exports.PushMyJsonFile = function(path, newObj)
             var fileData = JSON.parse(data);
             // console.log(fileData);
             fileData.push(newObj);
-            return fs.writeFile(path, JSON.stringify(fileData), (err) => console.log(err),);
+            return fs.writeFile(path, JSON.stringify(fileData), (err) => {if (err) console.log(err)},);
           } 
           catch (err) 
           {
