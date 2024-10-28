@@ -39,15 +39,44 @@ app.get("/form", (req, res) => {
 });
 
 
-app.get("/test", (req, res) => {
-  const db = new CDataBase("../database/test.db", res);
-  db.createTable("test", "id INTEGER PRIMARY KEY, name TEXT");
-  // db.insert("test", "1, 'John'");
-  // db.insert("test", "2, 'Doe'");
-  db.select("test", "*", "test.id=1");
-  db.select("test", "*", "test.id=2");  
-
+app.get("/sql", (req, res) => {
+  MyFunctions.ReadMyFile(res, "../my_htmls/sqlite.html");
 });
+
+app.post("/execute-query", middle, (req, res) => {
+  // console.log(req.headers);
+  // console.log(req.body);
+  var Object = JSON.parse(JSON.stringify(req.body));
+  console.log(Object);
+  const db = new CDataBase("../database/test.db");
+  // db.createTable(req.body.table, req.body.fields);
+  // db.insert(req.body.table, req.body.values);
+  db.select(Object.table , Object.select , Object.where, (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+    // console.log("important:  " + JSON.stringify(result));
+    res.json(result);
+  });
+});
+
+app.get("/test", (req, res) => {
+  const db = new CDataBase("../database/test.db");
+  db.createTable("test", "id INTEGER PRIMARY KEY, name TEXT");
+  db.insert("test", "3, 'Sample Name'" );
+  db.select("test", "*", "", (err, result) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+    console.log(result);
+    res.json(result);
+  });
+});
+
 
 
 app.listen(port, () =>

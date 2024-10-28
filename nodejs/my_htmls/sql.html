@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array Display</title>
+    <script>
+        async function fetchData() {
+            // fetch data from the server
+            try {
+                const response = await fetch('http://localhost:5000/test');
+                // parse the response
+                const data = await response.json();
+                console.log(data);
+                // display the data
+                displayArray(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        function displayArray(array) {
+            //  get the list element
+            const list = document.getElementById('array-list');
+            // loop through the array and display each item
+            array.forEach(item => {
+                console.log(item);
+                // create a list item
+                const listItem = document.createElement('li');
+                // set the text content to the stringified item
+                listItem.textContent = JSON.stringify(item);
+                // append the list item to the list
+                list.appendChild(listItem);
+            });
+        }
+        // call the fetchData function when the window loads
+        window.onload = fetchData;
+    </script>
+</head>
+<body>
+    <h1>Array Display</h1>
+    <ul id="array-list"></ul>
+</body>
+</html></html>

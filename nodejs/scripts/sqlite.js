@@ -1,12 +1,10 @@
 const sqlite3 = require('sqlite3').verbose();
 
-
 class CDataBase 
 {
-  constructor(_path, _resp)
+  constructor(_path)
   {
     console.log("constuctor called"); 
-    this.response = _resp;
     this.db = new sqlite3.Database(
       _path, 
       sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, 
@@ -28,24 +26,27 @@ class CDataBase
     this.db.run(sql, err => { if (err) return console.error(err.message); });
   }
 
-  select(_table, _fields, _where)
+  select(_table, _fields, _where, _callback)
   {
-    let results;
     console.log("select called"); 
+
+    if (_where == "") 
+    {
+      _where = "true";
+    }
+
     let sql = `SELECT ${_fields} FROM ${_table} WHERE ${_where}`;
-    this.db.all(
-      sql, 
-      [], 
-      (err, rows) => 
-        { if (err) return console.error(err.message); 
-          rows.forEach(rows => 
-            { 
-              console.log(rows);
-              results = JSON.parse(JSON.stringify(rows));
-            }); 
-        });
-        
-    this.response.json(results);
+
+    this.db.all(sql, (err, rows) => 
+    { 
+      if (err) 
+      {
+        console.error(err.message); 
+        _callback(err, null);
+      }
+      console.log(rows);
+      _callback(null, rows);
+    });
   }
 
 }
