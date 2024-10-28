@@ -43,6 +43,38 @@ app.get("/sql", (req, res) => {
   MyFunctions.ReadMyFile(res, "../my_htmls/sqlite.html");
 });
 
+app.get("/get-table-details", (req, res) => {
+  const db = new CDataBase("../database/test.db");
+
+//somehow try to get all infos in one array
+
+
+  var TableInfos = [];
+  db.getTables( (tables) =>
+  {
+    tables.forEach((table) => 
+    {
+      // console.log("tablename " + table.name);
+      var cols = [];
+      var colnames = 
+      db.getColumnNames(table.name, (columns) =>
+        {
+          columns.forEach( (column) => 
+          {
+            cols.push(column.name);
+          });
+          // console.log("cols");
+          // console.log(cols);
+          return cols;
+        });
+        TableInfos.push({name: table.name, columns: colnames});
+        console.log("TableInfos");
+        console.log(colnames);
+    })
+    res.json(TableInfos);
+  })
+});
+
 app.post("/execute-query", middle, (req, res) => {
   // console.log(req.headers);
   // console.log(req.body);

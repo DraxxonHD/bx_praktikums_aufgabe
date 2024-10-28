@@ -12,6 +12,20 @@ class CDataBase
       // console.log(this.db);
   }
 
+  getTables(_callback)
+  {
+    console.log("getTables called"); 
+    let sql = `SELECT name FROM sqlite_master WHERE type='table'`;
+    this.db.all(sql, (err, rows) => { if (err) return console.error(err.message); _callback(rows); });
+  }
+
+  getColumnNames(_table, _callback)
+  {
+    console.log("getColumnNames called"); 
+    let sql = `PRAGMA table_info(${_table})`;
+    this.db.all(sql, (err, rows) => { if (err) return console.error(err.message); _callback(rows); });
+  }
+
   createTable(_name, _fields)
   {
     console.log("create called"); 
@@ -44,7 +58,7 @@ class CDataBase
         console.error(err.message); 
         _callback(err, null);
       }
-      console.log(rows);
+      // console.log(rows);
       _callback(null, rows);
     });
   }
