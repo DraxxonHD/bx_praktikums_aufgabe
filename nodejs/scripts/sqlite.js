@@ -16,7 +16,11 @@ class CDataBase
   {
     console.log("getTables called"); 
     let sql = `SELECT name FROM sqlite_master WHERE type='table'`;
-    this.db.all(sql, (err, rows) => { if (err) return console.error(err.message); _callback(rows); });
+    this.db.all(sql, (err, rows) => 
+      { 
+        if (err) return console.error(err.message);
+         _callback(rows);
+      });
   }
 
   getColumnNames(_table, _callback)
