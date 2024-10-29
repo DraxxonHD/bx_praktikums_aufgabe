@@ -47,7 +47,13 @@ function TestTwo(_callback)
                     Table.cols.push(oneCol.name);
                     // console.log("TableInfos");
                     // console.log(TableInfos);
-                    _callback(TableInfos);
+
+                    // TEMPORARY IDEA
+                    if (TableInfos[TableInfos.length -1].cols != false)
+                    {
+
+                        _callback(TableInfos);
+                    }
                 });
             });
 
