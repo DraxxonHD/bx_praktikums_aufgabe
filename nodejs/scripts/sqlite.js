@@ -1,71 +1,92 @@
-const sqlite3 = require('sqlite3').verbose();
+const sqlite3 = require("sqlite3").verbose();
 
-class CDataBase 
-{
-  constructor(_path)
-  {
-    console.log("constuctor called"); 
+class CDataBase {
+  constructor(_path) {
+    console.log("constuctor called");
     this.db = new sqlite3.Database(
-      _path, 
-      sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, 
-      (err) => { if (err) return console.error(err.message); });
-      // console.log(this.db);
-  }
-
-  getTables(_callback)
-  {
-    console.log("getTables called"); 
-    let sql = `SELECT name FROM sqlite_master WHERE type='table'`;
-    this.db.all(sql, (err, rows) => 
-      { 
+      _path,
+      sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
+      (err) => {
         if (err) return console.error(err.message);
-         _callback(rows);
+      }
+    );
+  }
+  
+  async getTables() {
+    console.log("getTables called");
+    let sql = `SELECT name FROM sqlite_master WHERE type='table'`;
+    // first get all tablenames through a promise
+    const tables = await new Promise((resolve, reject) => {
+      this.db.all(sql, (err, rows) => {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve(rows);
+        }
       });
+    });
+
+    // then add a new property to each table object to store the column names
+    tables.forEach((table) => {
+      Object.assign(table, { cols: [] });
+    });
+
+    // then loop through each table and set the column names
+    for (const tableIndex in tables) {
+      sql = `PRAGMA table_info(${tables[tableIndex].name})`;
+      const cols = await new Promise((resolve, reject) => {
+        this.db.all(sql, (err, rows) => {
+          if (err) {
+            console.error(err.message);
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        });
+      });
+
+      const colsnames = cols.map((col) => col.name);
+      tables[tableIndex].cols = colsnames;
+    }
+    
+    return tables;
   }
 
-  getColumnNames(_table, _callback)
-  {
-    console.log("getColumnNames called"); 
-    let sql = `PRAGMA table_info(${_table})`;
-    this.db.all(sql, (err, rows) => { if (err) return console.error(err.message); _callback(rows); });
-  }
 
-  createTable(_name, _fields)
-  {
-    console.log("create called"); 
+  createTable(_name, _fields) {
+    console.log("create called");
     let sql = `CREATE TABLE IF NOT EXISTS ${_name} (${_fields})`;
-    this.db.run(sql, err => { if (err) return console.error(err.message); });
+    this.db.run(sql, (err) => {
+      if (err) return console.error(err.message);
+    });
   }
 
-  insert(_table, _values)
-  {
-    console.log("insert called"); 
+  insert(_table, _values) {
+    console.log("insert called");
     let sql = `INSERT INTO ${_table} VALUES (${_values})`;
-    this.db.run(sql, err => { if (err) return console.error(err.message); });
+    this.db.run(sql, (err) => {
+      if (err) return console.error(err.message);
+    });
   }
 
-  select(_table, _fields, _where, _callback)
-  {
-    console.log("select called"); 
+  select(_table, _fields, _where, _callback) {
+    console.log("select called");
 
-    if (_where == "") 
-    {
+    if (_where == "") {
       _where = "true";
     }
 
     let sql = `SELECT ${_fields} FROM ${_table} WHERE ${_where}`;
 
-    this.db.all(sql, (err, rows) => 
-    { 
-      if (err) 
-      {
-        console.error(err.message); 
+    this.db.all(sql, (err, rows) => {
+      if (err) {
+        console.error(err.message);
         _callback(err, null);
       }
       // console.log(rows);
       _callback(null, rows);
     });
   }
-
 }
-module.exports = CDataBase; 
+module.exports = CDataBase;
