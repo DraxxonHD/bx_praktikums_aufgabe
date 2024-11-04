@@ -8,15 +8,23 @@
 <body>
     <h1>Welcome to SQLite Example Page</h1>
     <form>
+        <label for="operation">Operation</label>
+        <select id="operation" name="operation">
+            <option value="select">Select</option>
+            <option value="insert">Insert</option>
+            <option value="update">Update</option>
+            <option value="delete">Delete</option>
+        </select>
+        <br>
         <label for="select">select:</label>
         <input type="text" id="select" name="select" required value="*">
         <br>
-        <label for="table">from table:</label>
+        <label for="table">table:</label>
         <select id="table" name="table"></select>
         <br>
+        <div id="columns" name="columns"></div>
         <label for="where">where:</label>
-        <select id="columns" name="columns"></select>
-        <input type="text" id="where" name="where"  value="=1">
+        <input type="text" id="where" name="where"  value="">
         <br>
         <input type="submit" value="Submit">
     </form>
@@ -27,6 +35,48 @@
 <script>
 
     var Tableinformation;
+
+    document.getElementById('operation').addEventListener('change', function() {
+        const operation = document.getElementById('operation').value;
+        const select = document.getElementById('select');
+        const SelectLabel = document.querySelector('label[for="select"]');
+        const where = document.getElementById('where');
+        const WhereLabel = document.querySelector('label[for="where"]');
+
+        select.name = operation;
+        switch (operation) {
+            case 'select':
+                select.value = '*';
+                SelectLabel.textContent = 'select:';
+                select.style.display = 'inline';
+
+                where.style.display = 'inline';
+                WhereLabel.style.display = 'inline';
+                break;
+            case 'insert':
+                select.name = 'values';
+                select.value = '';
+                SelectLabel.textContent = 'insert:';
+                where.style.display = 'none';
+                WhereLabel.style.display = 'none';
+                break;
+            case 'update':
+                select.name = 'set';
+                select.value = '';
+                SelectLabel.textContent = 'update:';
+                where.style.display = true;
+                break;
+            case 'delete':
+                select.value = ' ';
+                select.style.display = 'none';
+                // SelectLabel.style.display = 'none';
+                SelectLabel.textContent = 'delete:';
+                where.style.display = true;
+                break;
+            default:
+                break;
+        }
+    });
 
     // get the form element
     const form = document.querySelector("form");
@@ -41,12 +91,15 @@
         const TableObj = Tableinformation.find((item) => item.name === _tableName);
         const columns = document.getElementById('columns');
         columns.replaceChildren('');
-        TableObj.cols.forEach((col) => {
-            const ColumnOption = document.createElement('option');
-            ColumnOption.value = col;
-            ColumnOption.textContent = col;
-            columns.appendChild(ColumnOption);
-        }); 
+        const columlist = document.createElement('p');
+        columlist.textContent = TableObj.cols;
+        columns.appendChild(columlist);
+        // TableObj.cols.forEach((col) => {
+        //     const ColumnOption = document.createElement('li');
+        //     ColumnOption.value = col;
+        //     ColumnOption.textContent = col;
+        //     columns.appendChild(ColumnOption);
+        // }); 
     }
 
     // send the form data to the server
@@ -57,9 +110,11 @@
 
       // get the values from form
       const FormDataObj = Object.fromEntries(new FormData(form));
-        console.log(FormDataObj);
-        FormDataObj.where = FormDataObj.columns + FormDataObj.where;
-        delete FormDataObj.columns;
+      console.log(FormDataObj);
+      // add the col to where (into one property)  
+    //   FormDataObj.where = FormDataObj.columns + FormDataObj.where;
+      // delete uncessary property
+    //   delete FormDataObj.columns;
       // convert the form data to a URL encoded string
       const urlEncoded = new URLSearchParams(FormDataObj).toString();
         console.log(urlEncoded);
@@ -86,20 +141,20 @@
 
    async function displayArray(array) {
             //  get the list element
+            console.log(array);
             const list = document.getElementById('array-list');
             list.replaceChildren('');
-            // loop through the array and display each item
-            array.forEach(item => {
-                console.log(item);
-                // create a list item
-                const listItem = document.createElement('li');
-                // set the text content to the stringified item
-                listItem.textContent = JSON.stringify(item);
-                // append the list item to the list
-                list.appendChild(listItem);
-            });
-        }
-    
+                // loop through the array and display each item
+                array.forEach(item => {
+                    // console.log(item);
+                    // create a list item
+                    const listItem = document.createElement('li');
+                    // set the text content to the stringified item
+                    listItem.textContent = JSON.stringify(item);
+                    // append the list item to the list
+                    list.appendChild(listItem);
+                });
+   }
     
     async function DisplayTableOptions(_array) {
     try 

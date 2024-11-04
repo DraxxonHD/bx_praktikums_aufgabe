@@ -52,15 +52,40 @@ app.get("/get-table-details", (req, res) => {
   });
 });
 
-app.post("/execute-query", express.urlencoded({extended: false, limit: 10000, parameterLimit: 3,}), (req, res) => {
+app.post("/execute-query", express.urlencoded({extended: false, limit: 10000, parameterLimit: 4,}), (req, res) => {
   // jsonfy the body
   var Object = JSON.parse(JSON.stringify(req.body));
   console.log(Object);
   const db = new CDataBase("../database/test.db");
-  db.select(Object.table , Object.select , Object.where).then((result) => {
-    // console.log(result);
-    res.json(result);
-  });
+  switch (Object.operation)
+  {
+    case "select":
+      db.select(Object.table , Object.select , Object.where).then((result) => {
+        console.log(result);
+        res.json(result);
+      });
+      break;
+    case "insert":
+      db.insert(Object.table, Object.values).then((result) => {
+        console.log(result);
+        res.json(result);
+      });
+      break;
+    case "update":
+      db.update(Object.table, Object.set, Object.where).then((result) => {
+        console.log(result);
+        res.json(result);
+      });
+      break;
+    case "delete":
+      db.delete(Object.table, Object.where).then((result) => {
+        console.log(result);
+        res.json(result);
+      });
+      break;
+      default:
+        res.status(400).send("Bad Request");
+  }
 });
 
 app.get("/test", (req, res) => {

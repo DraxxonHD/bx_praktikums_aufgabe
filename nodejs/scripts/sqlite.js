@@ -65,12 +65,22 @@ class CDataBase {
   insert(_table, _values) {
     console.log("insert called");
     let sql = `INSERT INTO ${_table} VALUES (${_values})`;
-    this.db.run(sql, (err) => {
-      if (err) return console.error(err.message);
-    });
+    return new Promise((resolve, reject) => {
+      this.db.run(sql, (err) => {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        }
+        
+        console.log();
+        const changes = this.changes;
+        resolve(this.select(_table, "*", ""));
+      });
+    }
+    );
   }
 
-  select(_table, _fields, _where, _callback) {
+  select(_table, _fields, _where) {
     console.log("select called");
 
     if (_where == "") {
@@ -85,6 +95,20 @@ class CDataBase {
           reject(err);
         }
         resolve(rows);
+      });
+    });
+  }
+
+  delete(_table, _where) {
+    console.log("delete called");
+    let sql = `DELETE FROM ${_table} WHERE ${_where}`;
+    return new Promise((resolve, reject) => {
+      this.db.run(sql, (err) => {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        }
+        resolve(this.select(_table, "*", ""));
       });
     });
   }
