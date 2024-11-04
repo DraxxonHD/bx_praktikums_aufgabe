@@ -36,7 +36,7 @@
 
     var Tableinformation;
 
-    document.getElementById('operation').addEventListener('change', function() {
+    document.getElementById('operation').addEventListener('change', async function() {
         const operation = document.getElementById('operation').value;
         const select = document.getElementById('select');
         const SelectLabel = document.querySelector('label[for="select"]');
@@ -63,7 +63,7 @@
             case 'update':
                 select.name = 'set';
                 select.value = '';
-                SelectLabel.textContent = 'update:';
+                SelectLabel.textContent = 'set:';
                 where.style.display = true;
                 break;
             case 'delete':

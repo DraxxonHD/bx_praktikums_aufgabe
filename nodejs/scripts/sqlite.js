@@ -112,5 +112,19 @@ class CDataBase {
       });
     });
   }
+
+  update(_table, _set, _where) {
+    console.log("update called");
+    let sql = `UPDATE ${_table} SET ${_set} WHERE ${_where}`;
+    return new Promise((resolve, reject) => {
+      this.db.run(sql, (err) => {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        }
+        resolve(this.select(_table, "*", ""));
+      });
+    });
+  }
 }
 module.exports = CDataBase;
