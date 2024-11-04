@@ -45,51 +45,20 @@ app.get("/sql", (req, res) => {
 
 app.get("/get-table-details", (req, res) => {
   const db = new CDataBase("../database/test.db");
-
 //somehow try to get all infos in one array
-
-
-  var TableInfos = [];
-  db.getTables( (tables) =>
-  {
-    tables.forEach((table) => 
-    {
-      // console.log("tablename " + table.name);
-      var cols = [];
-      var colnames = 
-      db.getColumnNames(table.name, (columns) =>
-        {
-          columns.forEach( (column) => 
-          {
-            cols.push(column.name);
-          });
-          // console.log("cols");
-          // console.log(cols);
-          return cols;
-        });
-        TableInfos.push({name: table.name, columns: colnames});
-        console.log("TableInfos");
-        console.log(colnames);
-    })
-    res.json(TableInfos);
-  })
+  db.getTables().then((result) => {
+    // console.log(result);
+    res.json(result);
+  });
 });
 
-app.post("/execute-query", middle, (req, res) => {
-  // console.log(req.headers);
-  // console.log(req.body);
+app.post("/execute-query", express.urlencoded({extended: false, limit: 10000, parameterLimit: 3,}), (req, res) => {
+  // jsonfy the body
   var Object = JSON.parse(JSON.stringify(req.body));
   console.log(Object);
   const db = new CDataBase("../database/test.db");
-  // db.createTable(req.body.table, req.body.fields);
-  // db.insert(req.body.table, req.body.values);
-  db.select(Object.table , Object.select , Object.where, (err, result) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).send("Internal Server Error");
-      return;
-    }
-    // console.log("important:  " + JSON.stringify(result));
+  db.select(Object.table , Object.select , Object.where).then((result) => {
+    // console.log(result);
     res.json(result);
   });
 });

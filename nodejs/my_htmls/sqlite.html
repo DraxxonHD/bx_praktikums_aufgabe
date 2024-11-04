@@ -8,15 +8,15 @@
 <body>
     <h1>Welcome to SQLite Example Page</h1>
     <form>
-        <label for="table">table:</label>
-        <select id="table" name="table">
-        </select>
-        <br>
         <label for="select">select:</label>
         <input type="text" id="select" name="select" required value="*">
         <br>
+        <label for="table">from table:</label>
+        <select id="table" name="table"></select>
+        <br>
         <label for="where">where:</label>
-        <input type="text" id="where" name="where"  value="">
+        <select id="columns" name="columns"></select>
+        <input type="text" id="where" name="where"  value="=1">
         <br>
         <input type="submit" value="Submit">
     </form>
@@ -26,74 +26,55 @@
 
 <script>
 
-    var TableName;
-    var Columns = [];
-
-    async function DisplayTableOptions() {
-        try 
-        {
-            console.log("DisplayTableOptions");
-            var urlEncoded = new URLSearchParams();
-            
-            urlEncoded.append('get', '');
-            urlEncoded.append('table', '');
-
-            urlEncoded.get = 'GetTables';
-            console.log(urlEncoded);
-            const response = await fetch("http://localhost:5000/get-table-details", {
-                method: "GET",
-                body: urlEncoded,
-                headers: {
-                  "Content-Type": "application/x-www-form-urlencoded",
-                },
-              });
-            const data = await response.json();
-            console.log(data);
-            const NameArray = data.map(item => item.name);
-
-            const table = document.getElementById('table');
-            NameArray.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item;
-                option.textContent = item;
-                table.appendChild(option);
-            });
-        }
-        catch (error) 
-        {
-            console.error('Error fetching data:', error);
-        }
-    }
+    var Tableinformation;
 
     // get the form element
     const form = document.querySelector("form");
-    
+    const table = document.getElementById('table');
     // add an event listener to the form
     form.addEventListener("submit", (e) => SendForm(e));
+    table.addEventListener("change", (e) => showColumns(e.target.value));
     
+
+
+    async function showColumns(_tableName){
+        const TableObj = Tableinformation.find((item) => item.name === _tableName);
+        const columns = document.getElementById('columns');
+        columns.replaceChildren('');
+        TableObj.cols.forEach((col) => {
+            const ColumnOption = document.createElement('option');
+            ColumnOption.value = col;
+            ColumnOption.textContent = col;
+            columns.appendChild(ColumnOption);
+        }); 
+    }
+
     // send the form data to the server
-    function SendForm(event) 
+    async function SendForm(event) 
     {
         // prevent the default form submission
       event.preventDefault();
 
-      // get the form data
-      const fd = new FormData(form);
-
+      // get the values from form
+      const FormDataObj = Object.fromEntries(new FormData(form));
+        console.log(FormDataObj);
+        FormDataObj.where = FormDataObj.columns + FormDataObj.where;
+        delete FormDataObj.columns;
       // convert the form data to a URL encoded string
-      const urlEncoded = new URLSearchParams(fd).toString();
-
+      const urlEncoded = new URLSearchParams(FormDataObj).toString();
+        console.log(urlEncoded);
       try 
       {
         // send the form data to the server
-        const response = fetch("http://localhost:5000/execute-query", {
+        const response = await fetch("http://localhost:5000/execute-query", {
         method: "POST",
         body: urlEncoded,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       });
-      fetchData(response);
+        const data = await response.json();
+        displayArray(data);   
      } 
     catch (error) 
         {
@@ -102,30 +83,8 @@
 
     };
 
-    // fetch data from the server
-    async function fetchData(_response) {
-        try {
-            const response = await _response;
-            // parse the response
-            const data = await response.json();
-            console.log("data");
-            console.log(data);
-            // try to display the data
-            try 
-            {
-                displayArray(data);
-            } 
-            catch (error) 
-            {
-                console.error('Error displaying data:', error);
-            }
 
-        } catch (error) {
-            console.error('Error fetching datat:', error);
-        }
-    }
-
-    function displayArray(array) {
+   async function displayArray(array) {
             //  get the list element
             const list = document.getElementById('array-list');
             list.replaceChildren('');
@@ -140,16 +99,46 @@
                 list.appendChild(listItem);
             });
         }
-        // call the fetchData function when the window loads
-        
-    async function GetTableDetails(params) {
+    
+    
+    async function DisplayTableOptions(_array) {
+    try 
+    {
+        console.log("DisplayTableOptions");
+        const data = _array
+        console.log(data);
+        const table = document.getElementById('table');
+        const columns = document.getElementById('columns');
+        data.forEach((item) => {
+            // add options to "from Table"
+            const TableOption = document.createElement('option');
+            TableOption.value = item.name;
+            TableOption.textContent = item.name;
+            table.appendChild(TableOption);
+            // add options to "where column"
+            // item.cols.forEach((col) => {
+            //     const ColumnOption = document.createElement('option');
+            //     ColumnOption.value = col;
+            //     ColumnOption.textContent = col;
+            //     columns.appendChild(ColumnOption);
+            // });
+        });
+    }
+    catch (error) 
+    {
+        console.error('Error fetching data:', error);
+    }
+}
+    // call the fetchData function when the window loads        
+    async function GetTableDetails() {
         try 
         {
             const response = await fetch('http://localhost:5000/get-table-details');
             const data = await response.json();
+            Tableinformation = data;
             console.log(data);
-            const array = data.map(item => item.name);
-            displayArray(array);
+            showColumns(data[0].name);
+            DisplayTableOptions(data);
         }
         catch (error) 
         {
@@ -159,7 +148,7 @@
     }
 
     window.onload = GetTableDetails;
-    window.onload = DisplayTableOptions;
+    // window.onload = DisplayTableOptions;
 </script>
 
 </html>

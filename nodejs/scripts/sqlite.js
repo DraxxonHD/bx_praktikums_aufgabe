@@ -78,14 +78,14 @@ class CDataBase {
     }
 
     let sql = `SELECT ${_fields} FROM ${_table} WHERE ${_where}`;
-
-    this.db.all(sql, (err, rows) => {
-      if (err) {
-        console.error(err.message);
-        _callback(err, null);
-      }
-      // console.log(rows);
-      _callback(null, rows);
+    return new Promise((resolve, reject) => {
+      this.db.all(sql, (err, rows) => {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        }
+        resolve(rows);
+      });
     });
   }
 }
