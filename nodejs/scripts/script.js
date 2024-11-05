@@ -72,7 +72,7 @@ app.post("/execute-query", express.urlencoded({extended: false, limit: 10000, pa
       });
       break;
     case "update":
-      db.update(Object.table, Object.set, Object.where).then((result) => {
+      db.update(Object.table, Object.update, Object.where).then((result) => {
         console.log(result);
         res.json(result);
       });

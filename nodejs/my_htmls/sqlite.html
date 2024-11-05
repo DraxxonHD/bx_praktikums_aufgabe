@@ -18,6 +18,10 @@
         <br>
         <label for="select">select:</label>
         <input type="text" id="select" name="select" required value="*">
+        <label for="values">insert values:</label>
+        <input type="text" id="values" name="values" required value="*">
+        <label for="update">update:</label>
+        <input type="text" id="update" name="update" required value="*">
         <br>
         <label for="table">table:</label>
         <select id="table" name="table"></select>
@@ -28,6 +32,7 @@
         <br>
         <input type="submit" value="Submit">
     </form>
+    
     <h1>Array Display</h1>
     <ul id="array-list"></ul>
 </body>
@@ -36,47 +41,50 @@
 
     var Tableinformation;
 
-    document.getElementById('operation').addEventListener('change', async function() {
-        const operation = document.getElementById('operation').value;
-        const select = document.getElementById('select');
-        const SelectLabel = document.querySelector('label[for="select"]');
-        const where = document.getElementById('where');
-        const WhereLabel = document.querySelector('label[for="where"]');
+    async function ChangeDisplayValue(_what, _bool)
+    {
+        _bool? _bool = 'inline': _bool = 'none';
+        document.getElementById(_what).style.display = _bool;
+        document.querySelector('label[for=' + _what + ']').style.display = _bool;
+    }
 
-        select.name = operation;
-        switch (operation) {
+    // add an event listener to the operation select element
+    document.getElementById('operation').addEventListener('change', event => {
+        ChangeMode(event.target.value);
+    });
+
+    async function ChangeMode(_operation) {
+
+        console.log("Operation: ",_operation);
+        switch (_operation) {
             case 'select':
-                select.value = '*';
-                SelectLabel.textContent = 'select:';
-                select.style.display = 'inline';
-
-                where.style.display = 'inline';
-                WhereLabel.style.display = 'inline';
+                ChangeDisplayValue('select', true);
+                ChangeDisplayValue('where', true);
+                ChangeDisplayValue('values', false);
+                ChangeDisplayValue('update', false);
                 break;
             case 'insert':
-                select.name = 'values';
-                select.value = '';
-                SelectLabel.textContent = 'insert:';
-                where.style.display = 'none';
-                WhereLabel.style.display = 'none';
+                ChangeDisplayValue('select', false);
+                ChangeDisplayValue('where', false);
+                ChangeDisplayValue('values', true);
+                ChangeDisplayValue('update', false);
                 break;
             case 'update':
-                select.name = 'set';
-                select.value = '';
-                SelectLabel.textContent = 'set:';
-                where.style.display = true;
+                ChangeDisplayValue('select', false);
+                ChangeDisplayValue('where', true);
+                ChangeDisplayValue('values', false);
+                ChangeDisplayValue('update', true);
                 break;
             case 'delete':
-                select.value = ' ';
-                select.style.display = 'none';
-                // SelectLabel.style.display = 'none';
-                SelectLabel.textContent = 'delete:';
-                where.style.display = true;
+                ChangeDisplayValue('select', false);
+                ChangeDisplayValue('where', true);
+                ChangeDisplayValue('values', false);
+                ChangeDisplayValue('update', false);
                 break;
             default:
                 break;
         }
-    });
+    };
 
     // get the form element
     const form = document.querySelector("form");
@@ -108,13 +116,45 @@
         // prevent the default form submission
       event.preventDefault();
 
+      const mode = document.getElementById('operation').value;
+
       // get the values from form
       const FormDataObj = Object.fromEntries(new FormData(form));
-      console.log(FormDataObj);
+      console.log(FormDataObj);      
+      
+      // delete uncessary property
+      switch (mode) {
+          case 'select':
+                // delete FormDataObj.columns;
+                delete FormDataObj.values;
+                delete FormDataObj.update;
+                delete FormDataObj.insert;
+                delete FormDataObj.delete;
+               break;
+          case 'insert':
+                delete FormDataObj.select;
+                delete FormDataObj.update;
+                delete FormDataObj.delete;
+                delete FormDataObj.where;            
+              break;
+          case 'update':
+                delete FormDataObj.select;
+                delete FormDataObj.values;
+                delete FormDataObj.delete;
+              break;
+          case 'delete':
+                delete FormDataObj.select;
+                delete FormDataObj.values;
+                delete FormDataObj.update;
+              break;
+          default:
+              break;
+      }
+      console.log(FormDataObj);      
+
       // add the col to where (into one property)  
     //   FormDataObj.where = FormDataObj.columns + FormDataObj.where;
-      // delete uncessary property
-    //   delete FormDataObj.columns;
+
       // convert the form data to a URL encoded string
       const urlEncoded = new URLSearchParams(FormDataObj).toString();
         console.log(urlEncoded);
@@ -202,7 +242,8 @@
         
     }
 
-    window.onload = GetTableDetails;
+    window.onload = GetTableDetails, ChangeMode('select');
+    // window.onload = ChangeMode('select');
     // window.onload = DisplayTableOptions;
 </script>
 
