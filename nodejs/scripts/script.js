@@ -1,25 +1,21 @@
+// import needed packages
 const express = require("express");
 const cors = require("cors");
 const app = express();
 const port = 5000;
-// var fs = require("fs");
-// const sqlite3 = require('sqlite3').verbose();
-
-
-
+// custom imports
 const MyFunctions = require("./functions.js");
 const CDataBase = require("./sqlite.js");
 
 
 app.use(cors());
 
-
-
+// for root
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-
+// set restrictions
 const middle = express.urlencoded({
   extended: false,
   limit: 10000,
@@ -87,23 +83,6 @@ app.post("/execute-query", express.urlencoded({extended: false, limit: 10000, pa
         res.status(400).send("Bad Request");
   }
 });
-
-app.get("/test", (req, res) => {
-  const db = new CDataBase("../database/test.db");
-  db.createTable("test", "id INTEGER PRIMARY KEY, name TEXT");
-  db.insert("test", "3, 'Sample Name'" );
-  db.select("test", "*", "", (err, result) => {
-    if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).send("Internal Server Error");
-      return;
-    }
-    console.log(result);
-    res.json(result);
-  });
-});
-
-
 
 app.listen(port, () =>
   console.log("> Server is up and running on port : http://localhost:" + port),
