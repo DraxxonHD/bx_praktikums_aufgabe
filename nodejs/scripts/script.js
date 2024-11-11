@@ -3,16 +3,18 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const port = 5000;
+const path = require("path");
 // custom imports
 const MyFunctions = require("./functions.js");
 const CDataBase = require("./sqlite.js");
 
 
-app.use(cors());
+// make public folder
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // for root
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Hello Worlds!");
 });
 
 // set restrictions
@@ -31,12 +33,12 @@ app.post("/form/upload", middle, (req, res) => {
 });
 
 app.get("/form", (req, res) => {
-  MyFunctions.ReadMyFile(res, "../my_htmls/form.html");
+  MyFunctions.ReadMyFile(res, "../public/form.html");
 });
 
 
 app.get("/sql", (req, res) => {
-  MyFunctions.ReadMyFile(res, "../my_htmls/sqlite.html");
+  MyFunctions.ReadMyFile(res, "../public/sqlite.html");
 });
 
 app.get("/get-table-details", (req, res) => {

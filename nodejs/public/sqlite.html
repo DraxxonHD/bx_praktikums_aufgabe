@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>SQLite Example</title>
+</head>
+<body>
+    <h1>Welcome to SQLite Example Page</h1>
+    <form>
+        <label for="operation">Operation</label>
+        <select id="operation" name="operation">
+            <option value="select">Select</option>
+            <option value="insert">Insert</option>
+            <option value="update">Update</option>
+            <option value="delete">Delete</option>
+        </select>
+        <br>
+        <label for="select">select:</label>
+        <input type="text" id="select" name="select" required value="*">
+        <label for="values">insert values:</label>
+        <input type="text" id="values" name="values" required value="*">
+        <label for="update">update:</label>
+        <input type="text" id="update" name="update" required value="*">
+        <br>
+        <label for="table">table:</label>
+        <select id="table" name="table"></select>
+        <br>
+        <div id="columns" name="columns"></div>
+        <label for="where">where:</label>
+        <input type="text" id="where" name="where"  value="">
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    
+    <h1>Array Display</h1>
+    <ul id="array-list"></ul>
+    <table id="array-table">
+        <tr id="table-cols">
+        </tr>
+    </table>
+</body>
+
+<script src="script.js"></script>
+
+</html>

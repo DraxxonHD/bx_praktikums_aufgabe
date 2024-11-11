@@ -1,44 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQLite Example</title>
-</head>
-<body>
-    <h1>Welcome to SQLite Example Page</h1>
-    <form>
-        <label for="operation">Operation</label>
-        <select id="operation" name="operation">
-            <option value="select">Select</option>
-            <option value="insert">Insert</option>
-            <option value="update">Update</option>
-            <option value="delete">Delete</option>
-        </select>
-        <br>
-        <label for="select">select:</label>
-        <input type="text" id="select" name="select" required value="*">
-        <label for="values">insert values:</label>
-        <input type="text" id="values" name="values" required value="*">
-        <label for="update">update:</label>
-        <input type="text" id="update" name="update" required value="*">
-        <br>
-        <label for="table">table:</label>
-        <select id="table" name="table"></select>
-        <br>
-        <div id="columns" name="columns"></div>
-        <label for="where">where:</label>
-        <input type="text" id="where" name="where"  value="">
-        <br>
-        <input type="submit" value="Submit">
-    </form>
-    
-    <h1>Array Display</h1>
-    <ul id="array-list"></ul>
-
-</body>
-<script>
-    
+   
 
 var Tableinformation;
 
@@ -98,17 +58,22 @@ table.addEventListener("change", (e) => showColumns(e.target.value));
 
 async function showColumns(_tableName){
     const TableObj = Tableinformation.find((item) => item.name === _tableName);
-    const columns = document.getElementById('columns');
-    columns.replaceChildren('');
-    const columlist = document.createElement('p');
-    columlist.textContent = TableObj.cols;
-    columns.appendChild(columlist);
-    // TableObj.cols.forEach((col) => {
-    //     const ColumnOption = document.createElement('li');
-    //     ColumnOption.value = col;
-    //     ColumnOption.textContent = col;
-    //     columns.appendChild(ColumnOption);
-    // }); 
+    // const columns = document.getElementById('columns');
+    // columns.replaceChildren('');
+    // const columlist = document.createElement('p');
+    // columlist.textContent = TableObj.cols;
+    // columns.appendChild(columlist);
+
+    const colsnames = document.getElementById("table-cols");
+    colsnames.replaceChildren("");
+    TableObj.cols.forEach(colsname => 
+        {
+            const tablehead = document.createElement("th");
+            tablehead.textContent = colsname;
+            colsnames.appendChild(tablehead);
+        }
+    )
+
 }
 
 // send the form data to the server
@@ -170,7 +135,7 @@ async function SendForm(event)
     },
   });
     const data = await response.json();
-    displayArray(data);   
+    displayArray(FormDataObj.table, data);   
  } 
 catch (error) 
     {
@@ -180,20 +145,25 @@ catch (error)
 };
 
 
-async function displayArray(array) {
-        //  get the list element
-        console.log(array);
-        const list = document.getElementById('array-list');
-        list.replaceChildren('');
+async function displayArray(_table, _array) {
+    const colsnames = document.getElementById("table-cols");
+    const TableObj = Tableinformation.find((item) => item.name === _table);
+    //  get the list element
+        console.log(_array);
+        const list = document.getElementById('array-table');
+        list.replaceChildren(colsnames);
             // loop through the array and display each item
-            array.forEach(item => {
-                // console.log(item);
-                // create a list item
-                const listItem = document.createElement('li');
-                // set the text content to the stringified item
-                listItem.textContent = JSON.stringify(item);
-                // append the list item to the list
-                list.appendChild(listItem);
+            _array.forEach(item => {
+                const tablerow = document.createElement('tr');
+                TableObj.cols.forEach( cols => {
+                    const tabledetail = document.createElement('td');
+
+
+                    tabledetail.textContent = JSON.stringify(item[cols]);
+
+                    tablerow.appendChild(tabledetail);
+                } )
+                list.appendChild(tablerow)
             });
 }
 
@@ -246,8 +216,3 @@ async function GetTableDetails() {
 window.onload = GetTableDetails, ChangeMode('select');
 // window.onload = ChangeMode('select');
 // window.onload = DisplayTableOptions;
-
-</script>
-
-
-</html>
