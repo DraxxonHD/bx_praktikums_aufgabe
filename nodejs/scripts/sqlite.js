@@ -1,8 +1,15 @@
 const sqlite3 = require("sqlite3").verbose();
+const fs = require("fs");
 
 class CDataBase {
   constructor(_path) {
+    
     console.log("constuctor called");
+    if (!fs.existsSync(_path))
+    {
+      fs.mkdir(_path.substring(0, _path.lastIndexOf("/")), { recursive: true }, (err) => {if (err) console.log(err);});
+    }
+
     this.db = new sqlite3.Database(
       _path,
       sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
