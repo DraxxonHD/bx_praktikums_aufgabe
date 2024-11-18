@@ -1,3 +1,49 @@
 body{
-    background-color: greenyellow;
+    /* background-color: grey; */
+    box-sizing: content-box;
+    text-align: left;
+}
+
+h1
+{
+    text-align: center;
+}
+/* Form Styling */
+form
+{
+    
+}
+
+form > label
+{
+    width: 75px;
+    display: inline-flex;
+}
+
+
+/* Table styling*/
+table
+{
+    width: 100%;
+}
+
+table > *
+{
+    font-size: 20px;
+    text-align: center;
+}
+
+th
+{
+    background-color: aliceblue;
+}
+
+td
+{
+
+}
+
+tr:nth-child(2n-1)
+{
+    background-color: rgb(227, 227, 227);
 }

@@ -1,10 +1,8 @@
-   
-
 var Tableinformation;
 
 async function ChangeDisplayValue(_what, _bool)
 {
-    _bool? _bool = 'inline': _bool = 'none';
+    _bool? _bool = 'inline-flex': _bool = 'none';
     document.getElementById(_what).style.display = _bool;
     document.querySelector('label[for=' + _what + ']').style.display = _bool;
 }
@@ -69,7 +67,7 @@ async function showColumns(_tableName){
     TableObj.cols.forEach(colsname => 
         {
             const tablehead = document.createElement("th");
-            tablehead.textContent = colsname;
+            tablehead.textContent = colsname.toUpperCase();
             colsnames.appendChild(tablehead);
         }
     )
@@ -155,11 +153,12 @@ async function displayArray(_table, _array) {
             // loop through the array and display each item
             _array.forEach(item => {
                 const tablerow = document.createElement('tr');
+                // loop through the array and display details
                 TableObj.cols.forEach( cols => {
                     const tabledetail = document.createElement('td');
 
-
-                    tabledetail.textContent = JSON.stringify(item[cols]);
+                    const textContent = JSON.stringify(item[cols]);
+                    tabledetail.textContent = textContent.replaceAll('"', '');
 
                     tablerow.appendChild(tabledetail);
                 } )
@@ -179,7 +178,7 @@ try
         // add options to "from Table"
         const TableOption = document.createElement('option');
         TableOption.value = item.name;
-        TableOption.textContent = item.name;
+        TableOption.textContent = item.name.toUpperCase();
         table.appendChild(TableOption);
         // add options to "where column"
         // item.cols.forEach((col) => {
