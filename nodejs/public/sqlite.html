@@ -27,17 +27,24 @@
         <label for="table">table:</label>
         <select id="table" name="table"></select>
         <br>
-        <div id="columns" name="columns"></div>
         <label for="where">where:</label>
         <input type="text" id="where" name="where"  value="">
         <br>
-        <input type="submit" value="Submit">
+        <input type="submit" value="submit-querie">
     </form>
     <br>
-    <form action="/create-table" method="post" id="create-table">
+    <form id="create-form">
         <label for="table-name">Table Name</label>
         <input type="text" id="table-name" name="table-name" required>
-        <input type="submit" value="Create Table">
+        <br>
+        <label for="columns-to-add">Columns</label>
+        <br>
+        <div id="columns-to-add">
+            <!-- <input type="text" id="column-name" name="column-name" placeholder="name of column"> -->
+            <button type="button" id="add-column">Add Column</button>
+        </div>
+        <br>
+        <input type="submit">
     </form>
 
     <br>

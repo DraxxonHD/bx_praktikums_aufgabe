@@ -46,14 +46,104 @@ async function ChangeMode(_operation) {
 };
 
 // get the form element
-// document.getElementById("create-table").addEventListener("submit", (e) => e.preventDefault());
-const form = document.getElementById("querie-form");
+const createForm = document.getElementById("create-form");
+const queryForm = document.getElementById("querie-form");
 const table = document.getElementById('table');
 // add an event listener to the form
-form.addEventListener("submit", (e) => SendForm(e));
+queryForm.addEventListener("submit", (e) => SendQueryData(e));
+// add an event listener to the form
+createForm.addEventListener("submit", (e) => SendCreateTable(e));
+// add an event listener to the add column button
+document.getElementById('add-column').addEventListener('click', (e) => AddColumn(e));
+// add an event listener to the table select element
 table.addEventListener("change", (e) => showColumns(e.target.value));
 
 
+// add a new column to the form
+async function AddColumn(event) {
+    const sql_data_types = ['TEXT', 'INTEGER', 'REAL', 'BLOB', 'NULL'];
+    const sql_constraints = ['PRIMARY KEY', 'NOT NULL', 'UNIQUE', 'CHECK', 'DEFAULT', 'COLLATE', 'FOREIGN KEY', 'AUTOINCREMENT'];
+    // prevent the default form submission
+    event.preventDefault();
+    console.log("AddColumn");
+    console.log(event);
+    // get the columns element
+    const columns = document.getElementById('columns-to-add');
+    // create a new input element
+    const div = document.createElement('div');
+    const input = document.createElement('input');
+    const data_types_selection = document.createElement('select');
+    const constraints_selection = document.createElement('select');
+    const button = document.createElement('button');
+    // set the input type to text
+    input.type = 'text';
+    input.addEventListener('change', (e) => e.target.name = e.target.value);
+    button.textContent = 'X';
+    data_types_selection.name = 'data_type';
+    constraints_selection.name = 'constraints';
+    button.type = 'button';
+    button.addEventListener('click', (e) => e.target.parentElement.remove());
+    // add the input to the columns element
+    sql_data_types.forEach(option => {
+        const option_element = document.createElement('option');
+        option_element.value = option;
+        option_element.textContent = option;
+        data_types_selection.appendChild(option_element);
+    });
+    sql_constraints.forEach(option => {
+        const option_element = document.createElement('option');
+        option_element.value = option;
+        option_element.textContent = option;
+        constraints_selection.appendChild(option_element);
+    });
+    // append the input to the columns element
+    div.appendChild(document.createElement('br'));
+    div.appendChild(input);
+    div.appendChild(data_types_selection);
+    div.appendChild(constraints_selection);
+    div.appendChild(button);
+    columns.appendChild(div);
+};
+// https://mattstauffer.com/blog/a-little-trick-for-grouping-fields-in-an-html-form/
+
+async function SendCreateTable(event){
+    // prevent the default form submission
+    event.preventDefault();
+    // delete all columns
+    const columns = document.getElementById('columns-to-add');
+    
+    // get the values from form
+    const FormDataObj = Object.fromEntries(new FormData(createForm));
+    delete FormDataObj['column-name'];
+    console.log(FormDataObj);      
+    // convert the form data to a URL encoded string
+    const urlEncoded = new URLSearchParams(FormDataObj).toString();
+    console.log(urlEncoded);
+    SendToServer("http://localhost:5000/create-table",
+         urlEncoded,
+          callback_data => console.log(callback_data));    
+}
+
+async function SendToServer(_url, _data, _cb) {
+    try
+    {
+        // send the form data to the server
+        const response = await fetch(_url, {
+        method: "POST",
+        body: _data,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+    });
+        const data = await response.json();
+        _cb(data);
+        console.log(data);
+    }
+    catch (error)
+    {
+        console.error('Error sending data:', error);
+    }
+};
 
 async function showColumns(_tableName){
     const TableObj = Tableinformation.find((item) => item.name === _tableName);
@@ -76,7 +166,7 @@ async function showColumns(_tableName){
 }
 
 // send the form data to the server
-async function SendForm(event) 
+async function SendQueryData(event) 
 {
     // prevent the default form submission
   event.preventDefault();
@@ -84,7 +174,7 @@ async function SendForm(event)
   const mode = document.getElementById('operation').value;
 
   // get the values from form
-  const FormDataObj = Object.fromEntries(new FormData(form));
+  const FormDataObj = Object.fromEntries(new FormData(queryForm));
   console.log(FormDataObj);      
   
   // delete uncessary property
@@ -123,24 +213,9 @@ async function SendForm(event)
   // convert the form data to a URL encoded string
   const urlEncoded = new URLSearchParams(FormDataObj).toString();
     console.log(urlEncoded);
-  try 
-  {
-    // send the form data to the server
-    const response = await fetch("http://localhost:5000/execute-query", {
-    method: "POST",
-    body: urlEncoded,
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  });
-    const data = await response.json();
-    displayArray(FormDataObj.table, data);   
- } 
-catch (error) 
-    {
-        console.error('Error sending data:', error);
-    }    
-
+    SendToServer("http://localhost:5000/execute-query",
+         urlEncoded,
+          callback_data => displayArray(FormDataObj.table, callback_data));
 };
 
 

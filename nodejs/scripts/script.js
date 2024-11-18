@@ -41,9 +41,11 @@ app.get("/sql", (req, res) => {
   MyFunctions.ReadMyFile(res, "../public/sqlite.html");
 });
 
-app.post("/create-table", middle, (req, res) => {
+app.post("/create-table", express.urlencoded({extended: false, limit: 10000, parameterLimit: 10,}), (req, res) => {
   const db = new CDataBase("../database/test.db");
-  console.log(req.body["table-name"]);
+  // const tablename = req.body["table-name"];
+  // console.log(tablename);
+  console.log(req.body);
   res.end();
 });
 

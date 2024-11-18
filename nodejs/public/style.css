@@ -14,7 +14,7 @@ form
     
 }
 
-form > label
+label
 {
     width: 75px;
     display: inline-flex;
