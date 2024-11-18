@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Welcome to SQLite Example Page</h1>
-    <form>
+    <form id="querie-form">
         <label for="operation">Operation</label>
         <select id="operation" name="operation">
             <option value="select">Select</option>
@@ -33,6 +33,14 @@
         <br>
         <input type="submit" value="Submit">
     </form>
+    <br>
+    <form action="/create-table" method="post" id="create-table">
+        <label for="table-name">Table Name</label>
+        <input type="text" id="table-name" name="table-name" required>
+        <input type="submit" value="Create Table">
+    </form>
+
+    <br>
     
     <h1>Array Display</h1>
     <ul id="array-list"></ul>

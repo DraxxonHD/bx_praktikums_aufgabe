@@ -46,7 +46,8 @@ async function ChangeMode(_operation) {
 };
 
 // get the form element
-const form = document.querySelector("form");
+// document.getElementById("create-table").addEventListener("submit", (e) => e.preventDefault());
+const form = document.getElementById("querie-form");
 const table = document.getElementById('table');
 // add an event listener to the form
 form.addEventListener("submit", (e) => SendForm(e));

@@ -41,6 +41,12 @@ app.get("/sql", (req, res) => {
   MyFunctions.ReadMyFile(res, "../public/sqlite.html");
 });
 
+app.post("/create-table", middle, (req, res) => {
+  const db = new CDataBase("../database/test.db");
+  console.log(req.body["table-name"]);
+  res.end();
+});
+
 app.get("/get-table-details", (req, res) => {
   const db = new CDataBase("../database/test.db");
 //somehow try to get all infos in one array
