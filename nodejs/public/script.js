@@ -58,9 +58,10 @@ document.getElementById('add-column').addEventListener('click', (e) => AddColumn
 // add an event listener to the table select element
 table.addEventListener("change", (e) => showColumns(e.target.value));
 
-
 // add a new column to the form
 async function AddColumn(event) {
+    const column_count = document.getElementById('columns-to-add').childElementCount - 1;
+    // declare options to choose from
     const sql_data_types = ['TEXT', 'INTEGER', 'REAL', 'BLOB', 'NULL'];
     const sql_constraints = ['PRIMARY KEY', 'NOT NULL', 'UNIQUE', 'CHECK', 'DEFAULT', 'COLLATE', 'FOREIGN KEY', 'AUTOINCREMENT'];
     // prevent the default form submission
@@ -77,12 +78,17 @@ async function AddColumn(event) {
     const button = document.createElement('button');
     // set the input type to text
     input.type = 'text';
-    input.addEventListener('change', (e) => e.target.name = e.target.value);
+    // input.addEventListener('change', (e) => e.target.name = e.target.value);
+    input.placeholder = 'Column Name';
+    input.name = `column[${column_count}][name]`;
+    // add a button to remove itself
     button.textContent = 'X';
-    data_types_selection.name = 'data_type';
-    constraints_selection.name = 'constraints';
-    button.type = 'button';
     button.addEventListener('click', (e) => e.target.parentElement.remove());
+    // assign the name to the input
+    
+    data_types_selection.name = `column[${column_count}][data_type]`;
+    constraints_selection.name = `column[${column_count}][constraints]`;
+    button.type = 'button';
     // add the input to the columns element
     sql_data_types.forEach(option => {
         const option_element = document.createElement('option');

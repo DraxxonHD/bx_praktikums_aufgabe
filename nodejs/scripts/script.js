@@ -45,7 +45,17 @@ app.post("/create-table", express.urlencoded({extended: false, limit: 10000, par
   const db = new CDataBase("../database/test.db");
   // const tablename = req.body["table-name"];
   // console.log(tablename);
-  console.log(req.body);
+  // console.log(req.body);
+  var Tess = JSON.parse(JSON.stringify(req.body));
+  // console.log(Object);
+
+  console.log(Tess['column[1][name]']);
+  for (let key in Tess) {
+    if (Tess.hasOwnProperty(key)) {
+      console.log(`${key}: ${Tess[key]}`);
+    }
+  }
+  res.send(Tess);
   res.end();
 });
 
