@@ -49,12 +49,8 @@ app.post("/create-table", express.urlencoded({extended: false, limit: 10000, par
   var Tess = JSON.parse(JSON.stringify(req.body));
   // console.log(Object);
 
-  console.log(Tess['column[1][name]']);
-  for (let key in Tess) {
-    if (Tess.hasOwnProperty(key)) {
-      console.log(`${key}: ${Tess[key]}`);
-    }
-  }
+  console.log(Tess);
+  console.log(Tess["column[0]"].name);
   res.send(Tess);
   res.end();
 });
