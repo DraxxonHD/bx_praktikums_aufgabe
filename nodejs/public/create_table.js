@@ -1,3 +1,5 @@
+import { PostObjectToServer } from './tools.js';
+
 export { createForm, AddColumn };
 
 
@@ -91,7 +93,8 @@ async function SendCreateTable(event){
     // [OBJECT OBJECT] !!!
     const urlEncoded = new URLSearchParams(FormatedObj).toString();
     console.log(urlEncoded);
-    SendToServer("http://localhost:5000/create-table",
-        urlEncoded,
+    PostObjectToServer("http://localhost:5000/create-table",
+        FormatedObj,
         callback_data => console.log(callback_data));    
+
 }

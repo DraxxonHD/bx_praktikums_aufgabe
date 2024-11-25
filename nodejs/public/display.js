@@ -1,4 +1,4 @@
-import { SendToServer } from './tools.js';
+import { PostObjectToServer } from './tools.js';
 import { ChangeMode } from './select_tools.js';
 
 export { queryForm, LoadTableData as GetTableDetails };
@@ -140,14 +140,8 @@ async function SendQueryData(event){
     }
     console.log(FormDataObj);      
 
-    // add the col to where (into one property)  
-    //   FormDataObj.where = FormDataObj.columns + FormDataObj.where;
-
-    // convert the form data to a URL encoded string
-    const urlEncoded = new URLSearchParams(FormDataObj).toString();
-        console.log(urlEncoded);
     // send the data to the server
-    SendToServer("http://localhost:5000/execute-query",
-        urlEncoded,
+    PostObjectToServer("http://localhost:5000/execute-query",
+        FormDataObj,
         callback_data => displayArray(FormDataObj.table, callback_data), Tableinformation);
     };

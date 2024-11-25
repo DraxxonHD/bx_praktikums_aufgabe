@@ -10,8 +10,7 @@ const CDataBase = require("./sqlite.js");
 
 
 // make public folder
-app.use(express.static(path.join(__dirname, '..', 'public')));
-
+app.use(express.static(path.join(__dirname, '..', 'public')), express.json());
 // for root
 app.get("/", (req, res) => {
   res.send("Hello Worlds!");
@@ -42,16 +41,17 @@ app.get("/sql", (req, res) => {
 });
 
 app.post("/create-table", express.urlencoded({extended: false, limit: 10000, parameterLimit: 10,}), (req, res) => {
-  const db = new CDataBase("../database/test.db");
+  // const db = new CDataBase("../database/test.db");
   // const tablename = req.body["table-name"];
   // console.log(tablename);
   // console.log(req.body);
-  var Tess = JSON.parse(JSON.stringify(req.body));
+  var Tess = (JSON.stringify(req.body));
   // console.log(Object);
 
   console.log(Tess);
-  console.log(Tess["column[0]"].name);
-  res.send(Tess);
+  console.log(req.body);
+  // console.log(Tess["column[0]"].name);
+  res.json(Tess);
   res.end();
 });
 
@@ -66,7 +66,7 @@ app.get("/get-table-details", (req, res) => {
 
 app.post("/execute-query", express.urlencoded({extended: false, limit: 10000, parameterLimit: 4,}), (req, res) => {
   // jsonfy the body
-  var Object = JSON.parse(JSON.stringify(req.body));
+  const Object = req.body;
   console.log(Object);
   const db = new CDataBase("../database/test.db");
   switch (Object.operation)

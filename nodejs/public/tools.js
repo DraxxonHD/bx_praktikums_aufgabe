@@ -1,14 +1,14 @@
-export { SendToServer };
+export { PostObjectToServer };
 
-async function SendToServer(_url, _data, _cb) {
+async function PostObjectToServer(_url, _data, _cb) {
     try
     {
         // send the form data to the server
         const response = await fetch(_url, {
         method: "POST",
-        body: _data,
+        body: JSON.stringify(_data),
         headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/json",
         },
     });
         const data = await response.json();
@@ -20,4 +20,3 @@ async function SendToServer(_url, _data, _cb) {
         console.error('Error sending data:', error);
     }
 };
-
