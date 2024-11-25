@@ -67,25 +67,26 @@ async function SendCreateTable(event){
     // prevent the default form submission
     event.preventDefault();
     // delete all columns
-    const columns = document.getElementById('columns-to-add');
+    const doc_columns = document.getElementById('columns-to-add');
     
     // get the values from form
     const FormDataObj = Object.fromEntries(new FormData(createForm));
     // delete FormDataObj['column-name']; --------------------
-    FormDataObj['column-count'] = columns.childElementCount - 1;
+    FormDataObj['column-count'] = doc_columns.childElementCount - 1;
     console.log((FormDataObj));      
     // format the data to be sent to the server
-    let FormatedObj = new Object();
-    // assign tablename to object
-    FormatedObj.table_name = FormDataObj['table-name'];
+    let FormatedObj = new Object({
+        table_name: FormDataObj['table-name'],
+        columns: new Array(),
+    });
+
     // add the columns to the array
     for (let i = 0; i < FormDataObj['column-count']; i++) {
-        FormatedObj[`column[${i}]`] = new Object();
-        FormatedObj[`column[${i}]`] =  {
+        FormatedObj.columns.push(new Object({
             name: FormDataObj[`column[${i}][name]`],
             data_type: FormDataObj[`column[${i}][data_type]`],
             constraints: FormDataObj[`column[${i}][constraints]`],
-        };
+        }));
     }
     // https://stackoverflow.com/questions/56173848/want-to-convert-a-nested-object-to-query-parameter-for-attaching-to-url
     console.log(JSON.stringify(FormatedObj).toString());
