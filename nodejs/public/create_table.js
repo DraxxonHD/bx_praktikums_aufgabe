@@ -91,8 +91,6 @@ async function SendCreateTable(event){
     console.log(JSON.stringify(FormatedObj).toString());
     console.log(FormatedObj);
     // [OBJECT OBJECT] !!!
-    const urlEncoded = new URLSearchParams(FormatedObj).toString();
-    console.log(urlEncoded);
     PostObjectToServer("http://localhost:5000/create-table",
         FormatedObj,
         callback_data => console.log(callback_data));    
