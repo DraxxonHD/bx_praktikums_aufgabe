@@ -42,29 +42,30 @@ app.get("/sql", (req, res) => {
 
 app.post("/create-table", express.urlencoded({extended: false, limit: 10000, parameterLimit: 10,}), (req, res) => {
   const db = new CDataBase("../database/test.db");
-  function formatFields(fields) {
-    let formattedFields = "";
-    fields.forEach((field, index) => {
-      formattedFields += `"${field.name}" ${field.data_type}`;
-      if (field.constraints) {
-        formattedFields += ` ${field.constraints}`;
-      }
-      if (index < fields.length - 1) {
-        formattedFields += ", ";
-      }
-    });
-    return formattedFields;
+  var Body = req.body;
+  switch (Body.operation) {
+    case "drop":
+      db.dropTable(Body.table_name).then((result) => {
+        console.log(result);
+        res.json(result);
+      });
+      break;
+    case "create":
+      db.createTable(Body.table_name, MyFunctions.formatFields(Body.columns)).then((result) => {
+        console.log(result);
+        res.json(result);
+      }).catch((err) => {
+        console.log(err);
+        res.json(err);
+        res.status(400).send(err);        
+      });
+      break;
+    default:
+      res.status(400).send("Bad Request");
   }
-  db.createTable(req.body.table_name, formatFields(req.body.columns));
 
+  console.log(Body);
 
-  var Tess = (JSON.stringify(req.body));
-
-  console.log(Tess);
-  console.log(req.body);
-
-  res.json(Tess);
-  res.end();
 });
 
 app.get("/get-table-details", (req, res) => {

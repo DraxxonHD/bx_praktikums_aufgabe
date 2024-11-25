@@ -63,10 +63,34 @@ class CDataBase {
 
   createTable(_name, _fields) {
     console.log("create called");
-    let sql = `CREATE TABLE IF NOT EXISTS ${_name} (${_fields})`;
-    this.db.run(sql, (err) => {
-      if (err) return console.error(err.message);
+    let sql = `CREATE TABLE IF NOT EXISTS ${_name} ${_fields}`;
+    return new Promise((resolve, reject) => {
+      this.db.run(sql, (err) => {
+        if (err) {
+          console.error(err.message);
+          resolve(new Array(err.message));
+        }
+        this.getTables().then((result) => {
+          resolve(result);
+        });
+      });
     });
+  }
+
+  dropTable(_name) {
+    console.log("drop called");
+    let sql = `DROP TABLE IF EXISTS ${_name}`;
+    return new Promise((resolve, reject) => {
+    this.db.run(sql, (err) => {
+      if (err) {
+        console.error(err.message);
+        resolve(new Array(err.message));
+      }
+      this.getTables().then((result) => {
+          resolve(result);
+      });
+    });
+  });
   }
 
   insert(_table, _values) {

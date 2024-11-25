@@ -18,5 +18,6 @@ async function PostObjectToServer(_url, _data, _cb) {
     catch (error)
     {
         console.error('Error sending data:', error);
+        alert("Error sending data" + error);
     }
 };

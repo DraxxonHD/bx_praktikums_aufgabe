@@ -1,7 +1,7 @@
 import { PostObjectToServer } from './tools.js';
 import { ChangeMode } from './select_tools.js';
 
-export { queryForm, LoadTableData as GetTableDetails };
+export { queryForm, LoadTableData, displayArray };
 
 // call the fetchData function when the window loads
 window.onload = LoadTableData();
@@ -29,7 +29,8 @@ async function LoadTableData() {
     }
     catch (error) 
     {
-        console.error('Error fetching data:', error);
+        console.error('Error loading Tabledata:', error);
+        alert("Error loading Tabledata:" + error);
     }
     
 }
@@ -62,20 +63,15 @@ async function DisplayTableOptions(_array) {
         const data = _array
         console.log(data);
         const table = document.getElementById('table');
-        const columns = document.getElementById('columns');
+        table.replaceChildren();
+        // const columns = document.getElementById('columns');
         data.forEach((item) => {
             // add options to "from Table"
             const TableOption = document.createElement('option');
             TableOption.value = item.name;
             TableOption.textContent = item.name.toUpperCase();
             table.appendChild(TableOption);
-            // add options to "where column"
-            // item.cols.forEach((col) => {
-            //     const ColumnOption = document.createElement('option');
-            //     ColumnOption.value = col;
-            //     ColumnOption.textContent = col;
-            //     columns.appendChild(ColumnOption);
-            // });
+
         });
     }
     catch (error) 

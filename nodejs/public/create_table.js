@@ -1,4 +1,5 @@
 import { PostObjectToServer } from './tools.js';
+import { LoadTableData } from './display.js';
 
 export { createForm, AddColumn };
 
@@ -76,6 +77,7 @@ async function SendCreateTable(event){
     console.log((FormDataObj));      
     // format the data to be sent to the server
     let FormatedObj = new Object({
+        operation : FormDataObj['operation'],
         table_name: FormDataObj['table-name'],
         columns: new Array(),
     });
@@ -94,13 +96,14 @@ async function SendCreateTable(event){
     // [OBJECT OBJECT] !!!
     try {
         // send the data to the server
-        PostObjectToServer("http://localhost:5000/create-table",
+       await PostObjectToServer("http://localhost:5000/create-table",
         FormatedObj,
         callback_data => console.log(callback_data));
         LoadTableData();    
     }
     catch (error) {
         console.log(error);
+        alert("Error fetching data" + error);
     }
 
 }

@@ -1,7 +1,6 @@
 // const multer = require("multer");
 const fs = require("fs");
-exports.PushMyJsonFile = function(path, newObj) 
-{
+exports.PushMyJsonFile = (path, newObj) =>{
     fs.readFile(path, (err, data) => 
       {
         if (err && err.code === 'ENOENT') 
@@ -27,8 +26,7 @@ exports.PushMyJsonFile = function(path, newObj)
     });
 }
   
-exports.ReadMyFile = function(resp, path) 
-{
+exports.ReadMyFile = (resp, path) =>{
     fs.readFile(path, function (err, data) 
     {
       if (err) 
@@ -40,5 +38,26 @@ exports.ReadMyFile = function(resp, path)
       resp.write(data);
       return resp.end();
     });
+}
+
+exports.formatFields = (fields) => {
+  let formattedFields = "";
+  if (!fields || !fields.length) {
+    return formattedFields;
+  }
+  else{
+    formattedFields += "(";
+    fields.forEach((field, index) => {
+      formattedFields += `"${field.name}" ${field.data_type}`;
+      if (field.constraints) {
+        formattedFields += ` ${field.constraints}`;
+      }
+      if (index < fields.length - 1) {
+        formattedFields += ", ";
+      }
+    });
+    formattedFields += ")";
+  }
+  return formattedFields;
 }
   
