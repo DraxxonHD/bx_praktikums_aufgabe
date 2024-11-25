@@ -92,8 +92,15 @@ async function SendCreateTable(event){
     console.log(JSON.stringify(FormatedObj).toString());
     console.log(FormatedObj);
     // [OBJECT OBJECT] !!!
-    PostObjectToServer("http://localhost:5000/create-table",
+    try {
+        // send the data to the server
+        PostObjectToServer("http://localhost:5000/create-table",
         FormatedObj,
-        callback_data => console.log(callback_data));    
+        callback_data => console.log(callback_data));
+        LoadTableData();    
+    }
+    catch (error) {
+        console.log(error);
+    }
 
 }

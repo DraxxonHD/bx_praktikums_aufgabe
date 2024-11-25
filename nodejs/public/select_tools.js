@@ -3,9 +3,7 @@ export { ChangeMode };
 
 window.onload = ChangeMode('select');
 // get the form element
-const table = document.getElementById('table');
 // add an event listener to the table select element
-table.addEventListener("change", (e) => showColumns(e.target.value));
 
 async function ChangeDisplayValue(_what, _bool)
 {

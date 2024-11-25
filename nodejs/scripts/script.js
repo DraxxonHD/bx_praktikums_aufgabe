@@ -41,16 +41,28 @@ app.get("/sql", (req, res) => {
 });
 
 app.post("/create-table", express.urlencoded({extended: false, limit: 10000, parameterLimit: 10,}), (req, res) => {
-  // const db = new CDataBase("../database/test.db");
-  // const tablename = req.body["table-name"];
-  // console.log(tablename);
-  // console.log(req.body);
+  const db = new CDataBase("../database/test.db");
+  function formatFields(fields) {
+    let formattedFields = "";
+    fields.forEach((field, index) => {
+      formattedFields += `"${field.name}" ${field.data_type}`;
+      if (field.constraints) {
+        formattedFields += ` ${field.constraints}`;
+      }
+      if (index < fields.length - 1) {
+        formattedFields += ", ";
+      }
+    });
+    return formattedFields;
+  }
+  db.createTable(req.body.table_name, formatFields(req.body.columns));
+
+
   var Tess = (JSON.stringify(req.body));
-  // console.log(Object);
 
   console.log(Tess);
   console.log(req.body);
-  // console.log(Tess["column[0]"].name);
+
   res.json(Tess);
   res.end();
 });

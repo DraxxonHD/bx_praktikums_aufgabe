@@ -12,6 +12,8 @@ var Tableinformation;
 
 const queryForm = document.getElementById("querie-form");
 
+const table = document.getElementById('table');
+table.addEventListener("change", (e) => showColumns(e.target.value));
 queryForm.addEventListener("submit", (e) => SendQueryData(e));
 
 // call the fetchData function when the window loads        
@@ -33,17 +35,23 @@ async function LoadTableData() {
 }
 
 async function showColumns(_tableName){
-    const TableObj = Tableinformation.find((item) => item.name === _tableName);
+    try {
+        const TableObj = Tableinformation.find((item) => item.name === _tableName);
 
-    const colsnames = document.getElementById("table-cols");
-    colsnames.replaceChildren("");
-    TableObj.cols.forEach(colsname => 
-        {
-            const tablehead = document.createElement("th");
-            tablehead.textContent = colsname.toUpperCase();
-            colsnames.appendChild(tablehead);
-        }
-    )
+        const colsnames = document.getElementById("table-cols");
+        colsnames.replaceChildren("");
+        TableObj.cols.forEach(colsname => 
+            {
+                const tablehead = document.createElement("th");
+                tablehead.textContent = colsname.toUpperCase();
+                colsnames.appendChild(tablehead);
+            }
+        )
+    }
+    catch (error) {
+        console.error('Error showing Columns:', error);
+        alert("Error showing Columns" + error);
+    }
 
 }
 
@@ -72,46 +80,49 @@ async function DisplayTableOptions(_array) {
     }
     catch (error) 
     {
-        console.error('Error fetching data:', error);
+        console.error('Error displaying Tableoptions:', error);
+        alert("Error displaying Tableoptions" + error);
     }
     }
 
 
     async function displayArray(_table, _array) {
-        const colsnames = document.getElementById("table-cols");
-        const TableObj = Tableinformation.find((item) => item.name === _table);
-        //  get the list element
+        try {
+            const colsnames = document.getElementById("table-cols");
+            const TableObj = Tableinformation.find((item) => item.name === _table);
+            //  get the list element
             console.log(_array);
             const list = document.getElementById('array-table');
             list.replaceChildren(colsnames);
-                // loop through the array and display each item
-                _array.forEach(item => {
-                    const tablerow = document.createElement('tr');
-                    // loop through the array and display details
-                    TableObj.cols.forEach( cols => {
-                        const tabledetail = document.createElement('td');
-
-                        const textContent = JSON.stringify(item[cols]);
-                        tabledetail.textContent = textContent.replaceAll('"', '');
-
-                        tablerow.appendChild(tabledetail);
-                    } )
-                    list.appendChild(tablerow)
-                });
+            // loop through the array and display each item
+            _array.forEach(item => {
+                const tablerow = document.createElement('tr');
+                // loop through the array and display details
+                TableObj.cols.forEach( cols => {
+                    const tabledetail = document.createElement('td');
+                    const textContent = JSON.stringify(item[cols]);
+                    tabledetail.textContent = textContent.replaceAll('"', '');
+                    tablerow.appendChild(tabledetail);
+                } )
+                list.appendChild(tablerow)
+            });
+        }
+        catch (error) {
+            console.error('Error fetching data:', error);
+            alert("Error fetching data" + error);
+        }
     }
 
 async function SendQueryData(event){
     // prevent the default form submission
     event.preventDefault();
 
-    const mode = document.getElementById('operation').value;
-
     // get the values from form
     const FormDataObj = Object.fromEntries(new FormData(queryForm));
     console.log(FormDataObj);      
     
     // delete uncessary property
-    switch (mode) {
+    switch (FormDataObj.operation) {
         case 'select':
                 // delete FormDataObj.columns;
                 delete FormDataObj.values;
