@@ -1,4 +1,4 @@
-import { PostObjectToServer } from './tools.js';
+import { PostObjectToServer, FormatObject } from './tools.js';
 import { ChangeMode } from './select_tools.js';
 
 export { queryForm, LoadTableData, displayArray };
@@ -125,24 +125,12 @@ async function SendQueryData(event){
     switch (FormDataObj.operation) {
         case 'select':
                 // delete FormDataObj.columns;
+                Data = await FormatObject(FormDataObj).then((data) => {return data});
                 delete FormDataObj.values;
                 delete FormDataObj.update;
                 delete FormDataObj.insert;
                 delete FormDataObj.delete;
-                Data = new Object({
-                    operation: FormDataObj.operation,
-                    table: FormDataObj.table,
-                    select: FormDataObj.select,
-                    where: new Array(),
-                })
-                // add the where to the array
-                for (let i = 0; i < NumberOfWhere; i++) {
-                console.log(Data);
-                Data.where.push(new Object({
-                        name: FormDataObj[`where[${i}]`],
-                        value: FormDataObj[`where[${i}][value]`],
-                    }));
-                }
+
             break;
         case 'insert':
                 delete FormDataObj.select;
@@ -197,7 +185,7 @@ async function SendQueryData(event){
         default:
             break;
     }
-    console.log(FormDataObj);      
+    console.log(Data);      
 
 
     // send the data to the server
@@ -222,7 +210,7 @@ async function SendQueryData(event){
                 const option = document.createElement("option");
                 option.textContent = colsname.toUpperCase();
                 input.type = "text";
-                select.name = `where[${index}]`;
+                select.name = `where[${index}][name]`;
                 input.name = `where[${index}][value]`;
 
                 select.appendChild(option);
