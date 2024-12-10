@@ -59,6 +59,8 @@ async function showColumns(_tableName){
 async function DisplayTableOptions(_array) {
     try 
     {
+    displayWhereOptions('test');
+
         console.log("DisplayTableOptions");
         const data = _array
         console.log(data);
@@ -117,7 +119,9 @@ async function SendQueryData(event){
     const FormDataObj = Object.fromEntries(new FormData(queryForm));
     console.log(FormDataObj);      
     
-    // delete uncessary property
+    const NumberOfWhere = document.getElementById('querie-form').querySelector('#where').childElementCount / 2;
+    // delete uncessary property and format the data to be sent to the server
+    let Data;
     switch (FormDataObj.operation) {
         case 'select':
                 // delete FormDataObj.columns;
@@ -125,30 +129,106 @@ async function SendQueryData(event){
                 delete FormDataObj.update;
                 delete FormDataObj.insert;
                 delete FormDataObj.delete;
+                Data = new Object({
+                    operation: FormDataObj.operation,
+                    table: FormDataObj.table,
+                    select: FormDataObj.select,
+                    where: new Array(),
+                })
+                // add the where to the array
+                for (let i = 0; i < NumberOfWhere; i++) {
+                console.log(Data);
+                Data.where.push(new Object({
+                        name: FormDataObj[`where[${i}]`],
+                        value: FormDataObj[`where[${i}][value]`],
+                    }));
+                }
             break;
         case 'insert':
                 delete FormDataObj.select;
                 delete FormDataObj.update;
                 delete FormDataObj.delete;
-                delete FormDataObj.where;            
+                delete FormDataObj.where;
+                // FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX
+                for (x of FormDataObj)
+                    {
+                        
+                    }       
+                Data = FormDataObj;     
             break;
         case 'update':
                 delete FormDataObj.select;
                 delete FormDataObj.values;
                 delete FormDataObj.delete;
-            break;
+                Data = new Object({
+                    operation: FormDataObj.operation,
+                    table: FormDataObj.table,
+                    select: FormDataObj.select,
+                    where: new Array(),
+                })
+                // add the where to the array
+                for (let i = 0; i < NumberOfWhere; i++) {
+                console.log(Data);
+                Data.where.push(new Object({
+                        name: FormDataObj[`where[${i}]`],
+                        value: FormDataObj[`where[${i}][value]`],
+                    }));
+                }
+                break;
         case 'delete':
                 delete FormDataObj.select;
                 delete FormDataObj.values;
                 delete FormDataObj.update;
-            break;
+                Data = new Object({
+                    operation: FormDataObj.operation,
+                    table: FormDataObj.table,
+                    select: FormDataObj.select,
+                    where: new Array(),
+                })
+                // add the where to the array
+                for (let i = 0; i < NumberOfWhere; i++) {
+                console.log(Data);
+                Data.where.push(new Object({
+                        name: FormDataObj[`where[${i}]`],
+                        value: FormDataObj[`where[${i}][value]`],
+                    }));
+                }
+                break;
         default:
             break;
     }
     console.log(FormDataObj);      
 
+
     // send the data to the server
     PostObjectToServer("http://localhost:5000/execute-query",
-        FormDataObj,
+        Data,
         callback_data => displayArray(FormDataObj.table, callback_data), Tableinformation);
     };
+
+    async function displayWhereOptions(_table){
+        console.log("displayWhereOptions");
+        console.log(_table);
+        console.log(Tableinformation);
+        // find table object from Tableinformation array by its name
+        const TableObj = Tableinformation.find((item) => item.name === _table);
+        const where = document.getElementById('querie-form').querySelector('#where');
+        where.replaceChildren();
+        let index = 0;
+        TableObj.cols.forEach(colsname => 
+            {
+                const input = document.createElement("input");
+                const select = document.createElement("select");
+                const option = document.createElement("option");
+                option.textContent = colsname.toUpperCase();
+                input.type = "text";
+                select.name = `where[${index}]`;
+                input.name = `where[${index}][value]`;
+
+                select.appendChild(option);
+                where.appendChild(select);
+                where.appendChild(input);
+                index++;
+            }
+        )
+    }

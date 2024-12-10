@@ -82,10 +82,19 @@ app.post("/execute-query", express.urlencoded({extended: false, limit: 10000, pa
   const Object = req.body;
   console.log(Object);
   const db = new CDataBase("../database/test.db");
+  let where = "";
+  for (x of req.body.where)
+  {
+    if (x.value != "")
+    {
+      where += `${x.name} ${x.value}`;
+    }
+  }
+
   switch (Object.operation)
   {
     case "select":
-      db.select(Object.table , Object.select , Object.where).then((result) => {
+      db.select(Object.table , Object.select , where).then((result) => {
         console.log(result);
         res.json(result);
       });
