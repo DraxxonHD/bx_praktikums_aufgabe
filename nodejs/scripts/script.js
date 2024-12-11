@@ -8,9 +8,8 @@ const path = require("path");
 const MyFunctions = require("./functions.js");
 const CDataBase = require("./sqlite.js");
 
-
 // make public folder
-app.use(express.static(path.join(__dirname, '..', 'public')), express.json());
+app.use(express.static(path.join(__dirname, "..", "public")), express.json());
 // for root
 app.get("/", (req, res) => {
   res.send("Hello Worlds!");
@@ -35,93 +34,98 @@ app.get("/form", (req, res) => {
   MyFunctions.ReadMyFile(res, "../public/form.html");
 });
 
-
 app.get("/sql", (req, res) => {
   MyFunctions.ReadMyFile(res, "../public/sqlite.html");
 });
 
-app.post("/create-table", express.urlencoded({extended: false, limit: 10000, parameterLimit: 10,}), (req, res) => {
-  const db = new CDataBase("../database/test.db");
-  var Body = req.body;
-  switch (Body.operation) {
-    case "drop":
-      db.dropTable(Body.table_name).then((result) => {
-        console.log(result);
-        res.json(result);
-      });
-      break;
-    case "create":
-      db.createTable(Body.table_name, MyFunctions.formatFields(Body.columns)).then((result) => {
-        console.log(result);
-        res.json(result);
-      }).catch((err) => {
-        console.log(err);
-        res.json(err);
-        res.status(400).send(err);        
-      });
-      break;
-    default:
-      res.status(400).send("Bad Request");
+app.post(
+  "/create-table",
+  express.urlencoded({ extended: false, limit: 10000, parameterLimit: 10 }),
+  (req, res) => {
+    const db = new CDataBase("../database/test.db");
+    var Body = req.body;
+    switch (Body.operation) {
+      case "drop":
+        db.dropTable(Body.table_name).then((result) => {
+          console.log(result);
+          res.json(result);
+        });
+        break;
+      case "create":
+        db.createTable(Body.table_name, MyFunctions.formatFields(Body.columns))
+          .then((result) => {
+            console.log(result);
+            res.json(result);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.json(err);
+            res.status(400).send(err);
+          });
+        break;
+      default:
+        res.status(400).send("Bad Request");
+    }
+
+    console.log(Body);
   }
-
-  console.log(Body);
-
-});
+);
 
 app.get("/get-table-details", (req, res) => {
   const db = new CDataBase("../database/test.db");
-//somehow try to get all infos in one array
+  //somehow try to get all infos in one array
   db.getTables().then((result) => {
     // console.log(result);
     res.json(result);
   });
 });
 
-app.post("/execute-query", express.urlencoded({extended: false, limit: 10000, parameterLimit: 4,}), (req, res) => {
-  // jsonfy the body
-  const Object = req.body;
-  console.log(Object);
-  const db = new CDataBase("../database/test.db");
-  let where = "";
-  for (x of req.body.where)
-  {
-    if (x.value != "")
-    {
-      where += `${x.name} ${x.value}`;
+app.post(
+  "/execute-query",
+  express.urlencoded({ extended: false, limit: 10000, parameterLimit: 4 }),
+  (req, res) => {
+    // jsonfy the body
+    const Object = req.body;
+    console.log(Object);
+    const db = new CDataBase("../database/test.db");
+    let where = "";
+    for (x of req.body.where) {
+      if (x.value != "") {
+        where += `${x.name} ${x.value}`;
+      }
     }
-  }
 
-  switch (Object.operation)
-  {
-    case "select":
-      db.select(Object.table , Object.select , where).then((result) => {
-        console.log(result);
-        res.json(result);
-      });
-      break;
-    case "insert":
-      db.insert(Object.table, Object.values).then((result) => {
-        console.log(result);
-        res.json(result);
-      });
-      break;
-    case "update":
-      db.update(Object.table, Object.update, Object.where).then((result) => {
-        console.log(result);
-        res.json(result);
-      });
-      break;
-    case "delete":
-      db.delete(Object.table, Object.where).then((result) => {
-        console.log(result);
-        res.json(result);
-      });
-      break;
+    switch (Object.operation) {
+      case "select":
+        db.select(Object.table, Object.select, where).then((result) => {
+          console.log(result);
+          res.json(result);
+        });
+        break;
+      case "insert":
+        db.insert(Object.table, Object.values).then((result) => {
+          console.log(result);
+          res.json(result);
+        });
+        break;
+      case "update":
+        db.update(Object.table, Object.update, Object.where).then((result) => {
+          console.log(result);
+          res.json(result);
+        });
+        break;
+      case "delete":
+        db.delete(Object.table, Object.where).then((result) => {
+          console.log(result);
+          res.json(result);
+        });
+        break;
       default:
         res.status(400).send("Bad Request");
+    }
   }
-});
+);
 
 app.listen(port, () =>
-  console.log("> Server is up and running on port : http://localhost:" + port),
+  console.log("> Server is up and running on port : http://localhost:" + port)
 );
