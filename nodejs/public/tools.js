@@ -61,17 +61,32 @@ async function FormatObject(_data) {
             // const indexRegEx = new RegExp(/\[[0-9]+\]/g);
             for (let key of BracketKeys) {
                 // get the keyname without the brackets
-                let keyName = key.replace(/\[.*?\]/g, '');
+                const keyName = key.replace(/\[.*?\]/g, '');
                 // if the keyname is not in the object, add it
                 if (formattedData[keyName] === undefined) {
                     formattedData[keyName] = new Array();
                 }
                 // push the object with its key to the array
-                console.log(key);
-                console.log(_data[key]);
+                // console.log(key);
+                // console.log(_data[key]);
                 // add key value pair !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                formattedData[keyName].push(new Object(_data[key]));
-                console.log(formattedData);
+                const index = key.match(/\d+/g);
+                // replace everything except the key name
+                const TEMPindexKey = key.match(/\[[a-zA-z]+\]/g);
+                const indexKey = TEMPindexKey[0].replace(/\[|\]/g, '');
+                console.log(index);
+                console.log(indexKey);
+                // if index matches array index, add key value pair to object
+                if (formattedData[keyName][index] === undefined) {
+                    formattedData[keyName].push(new Object());
+                    formattedData[keyName][index][indexKey] = _data[key];
+                }
+                else {
+                    console.log("key exists");
+                    console.log(key);
+                    formattedData[keyName][index][indexKey] = _data[key];
+                }
+                // console.log(formattedData);
             }
             resolve(formattedData);            
         }

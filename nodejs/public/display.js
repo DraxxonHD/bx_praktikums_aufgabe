@@ -121,11 +121,9 @@ async function SendQueryData(event){
     
     const NumberOfWhere = document.getElementById('querie-form').querySelector('#where').childElementCount / 2;
     // delete uncessary property and format the data to be sent to the server
-    let Data;
+    let Data = await FormatObject(FormDataObj).then((data) => {return data});
     switch (FormDataObj.operation) {
         case 'select':
-                // delete FormDataObj.columns;
-                Data = await FormatObject(FormDataObj).then((data) => {return data});
                 delete FormDataObj.values;
                 delete FormDataObj.update;
                 delete FormDataObj.insert;
@@ -137,50 +135,16 @@ async function SendQueryData(event){
                 delete FormDataObj.update;
                 delete FormDataObj.delete;
                 delete FormDataObj.where;
-                // FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX
-                for (x of FormDataObj)
-                    {
-                        
-                    }       
-                Data = FormDataObj;     
             break;
         case 'update':
                 delete FormDataObj.select;
                 delete FormDataObj.values;
                 delete FormDataObj.delete;
-                Data = new Object({
-                    operation: FormDataObj.operation,
-                    table: FormDataObj.table,
-                    select: FormDataObj.select,
-                    where: new Array(),
-                })
-                // add the where to the array
-                for (let i = 0; i < NumberOfWhere; i++) {
-                console.log(Data);
-                Data.where.push(new Object({
-                        name: FormDataObj[`where[${i}]`],
-                        value: FormDataObj[`where[${i}][value]`],
-                    }));
-                }
                 break;
         case 'delete':
                 delete FormDataObj.select;
                 delete FormDataObj.values;
                 delete FormDataObj.update;
-                Data = new Object({
-                    operation: FormDataObj.operation,
-                    table: FormDataObj.table,
-                    select: FormDataObj.select,
-                    where: new Array(),
-                })
-                // add the where to the array
-                for (let i = 0; i < NumberOfWhere; i++) {
-                console.log(Data);
-                Data.where.push(new Object({
-                        name: FormDataObj[`where[${i}]`],
-                        value: FormDataObj[`where[${i}][value]`],
-                    }));
-                }
                 break;
         default:
             break;
