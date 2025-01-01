@@ -68,10 +68,14 @@ class CDataBase {
       this.db.run(sql, (err) => {
         if (err) {
           console.error(err.message);
-          resolve(new Array(err.message));
+          reject(new Array(err.message));
         }
         this.getTables().then((result) => {
           resolve(result);
+        })
+        .catch((err) => {
+          console.error(err.message);
+          reject(new Array(err.message));
         });
       });
     });
@@ -84,10 +88,14 @@ class CDataBase {
     this.db.run(sql, (err) => {
       if (err) {
         console.error(err.message);
-        resolve(new Array(err.message));
+        reject(new Array(err.message));
       }
       this.getTables().then((result) => {
           resolve(result);
+      })
+      .catch((err) => {
+        console.error(err.message);
+        reject(new Array(err.message));
       });
     });
   });
@@ -101,7 +109,7 @@ class CDataBase {
         if (err) {
           console.error(err.message);
           // reject(err);
-          resolve(new Array(err.message));
+          reject(new Array(err.message));
         }
         
         console.log();
@@ -124,7 +132,7 @@ class CDataBase {
       this.db.all(sql, (err, rows) => {
         if (err) {
           console.error(err.message);
-          resolve(new Array(err.message));
+          reject(new Array(err.message));
         }
         resolve(rows);
       });
@@ -138,7 +146,7 @@ class CDataBase {
       this.db.run(sql, (err) => {
         if (err) {
           console.error(err.message);
-          resolve(new Array(err.message));
+          reject(new Array(err.message));
         }
         resolve(this.select(_table, "*", ""));
       });
@@ -152,7 +160,7 @@ class CDataBase {
       this.db.run(sql, (err) => {
         if (err) {
           console.error(err.message);
-          resolve(new Array(err.message));
+          reject(new Array(err.message));
         }
         resolve(this.select(_table, "*", ""));
       });

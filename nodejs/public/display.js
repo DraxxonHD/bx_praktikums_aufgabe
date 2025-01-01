@@ -84,7 +84,9 @@ async function displayArray(_table, _array) {
       TableObj.cols.forEach((cols) => {
         const tabledetail = document.createElement("td");
         const textContent = JSON.stringify(item[cols]);
-        tabledetail.textContent = textContent.replaceAll('"', "");
+        if (textContent != undefined) {
+          tabledetail.textContent = textContent.replaceAll('"', "");
+        }
         tablerow.appendChild(tabledetail);
       });
       list.appendChild(tablerow);

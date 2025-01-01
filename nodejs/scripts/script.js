@@ -77,6 +77,10 @@ app.get("/get-table-details", (req, res) => {
   db.getTables().then((result) => {
     // console.log(result);
     res.json(result);
+  })
+  .catch((err) => {
+    console.log(err);
+    res.json(err);
   });
 });
 
@@ -89,6 +93,7 @@ app.post(
     console.log(Object);
     const db = new CDataBase("../database/test.db");
     let where = "";
+    // format the where clause
     for (x of req.body.where) {
       if (x.value != "") {
         where += `${x.name} ${x.value}`;
@@ -97,28 +102,48 @@ app.post(
 
     switch (Object.operation) {
       case "select":
-        db.select(Object.table, Object.select, where).then((result) => {
-          console.log(result);
-          res.json(result);
-        });
+        db.select(Object.table, Object.select ?? "*", where)
+          .then((result) => {
+            console.log(result);
+            res.json(result);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.json(err);
+          });
         break;
       case "insert":
-        db.insert(Object.table, Object.values).then((result) => {
-          console.log(result);
-          res.json(result);
-        });
+        db.insert(Object.table, Object.values)
+          .then((result) => {
+            console.log(result);
+            res.json(result);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.json(err);
+          });
         break;
       case "update":
-        db.update(Object.table, Object.update, Object.where).then((result) => {
-          console.log(result);
-          res.json(result);
-        });
+        db.update(Object.table, Object.update, where)
+          .then((result) => {
+            console.log(result);
+            res.json(result);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.json(err);
+          });
         break;
       case "delete":
-        db.delete(Object.table, Object.where).then((result) => {
-          console.log(result);
-          res.json(result);
-        });
+        db.delete(Object.table, where)
+          .then((result) => {
+            console.log(result);
+            res.json(result);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.json(err);
+          });
         break;
       default:
         res.status(400).send("Bad Request");
