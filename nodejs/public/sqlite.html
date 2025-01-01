@@ -8,52 +8,53 @@
 </head>
 <body>
     <h1>Welcome to SQLite Example Page</h1>
-    <form id="querie-form">
-        <label for="operation">Operation</label>
-        <select id="operation" name="operation">
-            <option value="select">Select</option>
-            <option value="insert">Insert</option>
-            <option value="update">Update</option>
-            <option value="delete">Delete</option>
-        </select>
-        <br>
-        <label for="select">select:</label>
-        <input type="text" id="select" name="select" required value="*">
-        <label for="values">insert values:</label>
-        <input type="text" id="values" name="values" required value="*">
-        <label for="update">update:</label>
-        <input type="text" id="update" name="update" required value="*">
-        <br>
-        <label for="table">table:</label>
-        <select id="table" name="table"></select>
-        <br>
-        <label for="where">where:</label>
-        <div id="where">
-            
-        </div>
-        <!-- <input type="text" id="where" name="where"  value=""> -->
-        <br>
-        <input type="submit" value="submit-querie">
-    </form>
-    <br>
-    <form id="create-form">
-        <select id="operation" name="operation">
-            <option value="create">Create</option>
-            <option value="drop">Drop</option>
-        </select>
-        <br>
-        <label for="table-name">Table Name</label>
-        <input type="text" id="table-name" name="table-name" required>
-        <br>
-        <label for="columns-to-add">Columns</label>
-        <br>
-        <div id="columns-to-add">
-            <!-- <input type="text" id="column-name" name="column-name" placeholder="name of column"> -->
-            <button type="button" id="add-column">Add Column</button>
-        </div>
-        <br>
-        <input type="submit">
-    </form>
+    <div id="forms">
+        <form id="querie-form">
+            <label for="operation">Operation</label>
+            <select id="operation" name="operation">
+                <option value="select">Select</option>
+                <option value="insert">Insert</option>
+                <option value="update">Update</option>
+                <option value="delete">Delete</option>
+            </select>
+            <br>
+            <label for="select">select:</label>
+            <input type="text" id="select" name="select" required value="*">
+            <label for="values">insert values:</label>
+            <input type="text" id="values" name="values" required value="*">
+            <label for="update">update:</label>
+            <input type="text" id="update" name="update" required value="*">
+            <br>
+            <label for="table">table:</label>
+            <select id="table" name="table"></select>
+            <br>
+            <label for="where">where:</label>
+            <div id="where">
+                
+            </div>
+            <!-- <input type="text" id="where" name="where"  value=""> -->
+            <br>
+            <input type="submit" value="submit-querie">
+        </form>
+        <form id="create-form">
+            <select id="operation" name="operation">
+                <option value="create">Create</option>
+                <option value="drop">Drop</option>
+            </select>
+            <br>
+            <label for="table-name">Table Name</label>
+            <input type="text" id="table-name" name="table-name" required>
+            <br>
+            <label for="columns-to-add">Columns</label>
+            <br>
+            <div id="columns-to-add">
+                <!-- <input type="text" id="column-name" name="column-name" placeholder="name of column"> -->
+                <button type="button" id="add-column">Add Column</button>
+            </div>
+            <br>
+            <input type="submit">
+        </form>
+    </div>
 
     <br>
     

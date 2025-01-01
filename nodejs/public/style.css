@@ -1,49 +1,133 @@
-body{
+:root {
+    --background-color: #f4f4f4;
+    --font-family: Arial, sans-serif;
+    --text-color: #333;
+    --form-background-color: #fff;
+    --form-padding: 20px;
+    --form-margin: 20px auto;
+    --form-border-radius: 8px;
+    --form-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    --form-max-width: 600px;
+    --label-width: 75px;
+    --label-margin-top: 10px;
+    --input-width: calc(100% - 80px);
+    --input-padding: 8px;
+    --input-margin: 10px 0;
+    --input-border: 1px solid #ccc;
+    --input-border-radius: 4px;
+    --button-background-color: #4CAF50;
+    --button-color: white;
+    --button-padding: 10px 20px;
+    --button-border: none;
+    --button-border-radius: 4px;
+    --button-margin-top: 10px;
+    --button-hover-background-color: #45a049;
+    --table-width: 100%;
+    --table-margin: 20px auto;
+    --table-background-color: #fff;
+    --table-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    --table-font-size: 20px;
+    --table-text-align: center;
+    --table-padding: 10px;
+    --th-background-color: #4CAF50;
+    --th-color: white;
+    --tr-odd-background-color: rgb(227, 227, 227);
+}
+
+body {
     /* background-color: grey; */
     box-sizing: content-box;
     text-align: left;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
 }
 
-h1
-{
+h1 {
     text-align: center;
+    color: var(--text-color);
 }
+
 /* Form Styling */
-form
-{
-    
+div#forms {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
 }
 
-label
-{
-    width: 75px;
+form {
+    background-color: var(--form-background-color);
+    padding: var(--form-padding);
+    margin: var(--form-margin);
+    border-radius: var(--form-border-radius);
+    box-shadow: var(--form-box-shadow);
+    max-width: var(--form-max-width);
+}
+
+label {
+    width: var(--label-width);
     display: inline-flex;
+    font-weight: bold;
+    margin-top: var(--label-margin-top);
 }
 
-
-/* Table styling*/
-table
-{
-    width: 100%;
+input[type="text"],
+select {
+    width: var(--input-width);
+    padding: var(--input-padding);
+    margin: var(--input-margin);
+    border: var(--input-border);
+    border-radius: var(--input-border-radius);
 }
 
-table > *
-{
-    font-size: 20px;
-    text-align: center;
+input[type="submit"],
+button {
+    background-color: var(--button-background-color);
+    color: var(--button-color);
+    padding: var(--button-padding);
+    border: var(--button-border);
+    border-radius: var(--button-border-radius);
+    cursor: pointer;
+    margin-top: var(--button-margin-top);
 }
 
-th
-{
-    background-color: aliceblue;
+input[type="submit"]:hover,
+button:hover {
+    background-color: var(--button-hover-background-color);
 }
 
-td
-{
-
+div#columns-to-add > div {
+    display: flex;
+    align-items: flex-start;
 }
 
-tr:nth-child(2n-1)
-{
-    background-color: rgb(227, 227, 227);
+/* Table styling */
+table {
+    width: var(--table-width);
+    border-collapse: collapse;
+    margin: var(--table-margin);
+    background-color: var(--table-background-color);
+    box-shadow: var(--table-box-shadow);
+}
+
+table > * {
+    font-size: var(--table-font-size);
+    text-align: var(--table-text-align);
+    padding: var(--table-padding);
+}
+
+th {
+    background-color: var(--th-background-color);
+    color: var(--th-color);
+    padding: var(--table-padding);
+}
+
+td {
+    padding: var(--table-padding);
+}
+
+tr:nth-child(2n-1) {
+    background-color: var(--tr-odd-background-color);
 }
