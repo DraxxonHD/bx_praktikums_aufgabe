@@ -1,30 +1,4 @@
-// const multer = require("multer");
 const fs = require("fs");
-exports.PushMyJsonFile = (path, newObj) =>{
-    fs.readFile(path, (err, data) => 
-      {
-        if (err && err.code === 'ENOENT') 
-          {
-            fs.mkdir(path.substring(0, path.lastIndexOf("/")), { recursive: true }, (err) => {if (err) console.log(err);});
-            return fs.writeFile(path, "[" + JSON.stringify(newObj) + "]", (err) => {if (err) console.log(err);});
-          } 
-        else if (err) console.log(err);
-        else 
-        {
-          try 
-          {
-            var fileData = JSON.parse(data);
-            // console.log(fileData);
-            fileData.push(newObj);
-            return fs.writeFile(path, JSON.stringify(fileData), (err) => {if (err) console.log(err)},);
-          } 
-          catch (err) 
-          {
-            console.log(err);
-          }
-        }
-    });
-}
   
 exports.ReadMyFile = (resp, path) =>{
     fs.readFile(path, function (err, data) 

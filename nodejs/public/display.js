@@ -3,6 +3,8 @@ import { ChangeMode } from "./select_tools.js";
 
 export { queryForm, LoadTableData, displayArray };
 
+
+
 // call the fetchData function when the window loads
 window.onload = LoadTableData();
 
@@ -13,6 +15,17 @@ const queryForm = document.getElementById("querie-form");
 const table = document.getElementById("table");
 table.addEventListener("change", (e) => showColumns(e.target.value));
 queryForm.addEventListener("submit", (e) => SendQueryData(e));
+
+// add event listener to the collapsible button
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".collapsible").forEach(coll => {
+      coll.addEventListener("click", () => {
+          coll.classList.toggle("active");
+          const content = coll.nextElementSibling;
+          content.style.display = (content.style.display === "block") ? "none" : "block";
+      });
+  });
+});
 
 // call the fetchData function when the window loads
 async function LoadTableData() {
@@ -53,16 +66,18 @@ async function DisplayTableOptions(_array) {
     console.log("DisplayTableOptions");
     const data = _array;
     console.log(data);
-    const table = document.getElementById("table");
-    table.replaceChildren();
-    // const columns = document.getElementById('columns');
-    data.forEach((item) => {
-      // add options to "from Table"
-      const TableOption = document.createElement("option");
-      TableOption.value = item.name;
-      TableOption.textContent = item.name.toUpperCase();
-      table.appendChild(TableOption);
-    });
+    const tables = document.querySelectorAll("#table");
+    tables.forEach((table) => {
+      table.replaceChildren();
+      // const columns = document.getElementById('columns');
+      data.forEach((item) => {
+        // add options to "from Table"
+        const TableOption = document.createElement("option");
+        TableOption.value = item.name;
+        TableOption.textContent = item.name.toUpperCase();
+        table.appendChild(TableOption);
+      });
+  });
   } catch (error) {
     console.error("Error displaying Tableoptions:", error);
     alert("Error displaying Tableoptions" + error);
@@ -117,29 +132,29 @@ async function SendQueryData(event) {
       console.log(error);
       alert("Error formating data" + error);
     });
-  switch (FormDataObj.operation) {
+    console.log("SWITCH");
+  switch (Data.operation) {
     case "select":
-      delete FormDataObj.values;
-      delete FormDataObj.update;
-      delete FormDataObj.insert;
-      delete FormDataObj.delete;
-
+      delete Data.values;
+      delete Data.update;
+      delete Data.insert;
+      delete Data.delete;
       break;
     case "insert":
-      delete FormDataObj.select;
-      delete FormDataObj.update;
-      delete FormDataObj.delete;
-      delete FormDataObj.where;
+      delete Data.select;
+      delete Data.update;
+      delete Data.delete;
+      delete Data.where;
       break;
     case "update":
-      delete FormDataObj.select;
-      delete FormDataObj.values;
-      delete FormDataObj.delete;
+      delete Data.select;
+      delete Data.values;
+      delete Data.delete;
       break;
     case "delete":
-      delete FormDataObj.select;
-      delete FormDataObj.values;
-      delete FormDataObj.update;
+      delete Data.select;
+      delete Data.values;
+      delete Data.update;
       break;
     default:
       break;

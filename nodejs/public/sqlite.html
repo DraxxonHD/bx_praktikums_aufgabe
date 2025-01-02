@@ -8,8 +8,30 @@
 </head>
 <body>
     <h1>Welcome to SQLite Example Page</h1>
+    <div id="guide">
+        <button class="collapsible">User Guide</button>
+        <div id="guide-content" style="display: none;">
+            <h2>User Guide</h2>
+            <p><strong>SELECT</strong> - Retrieve data from a database</p>
+            <p><strong>INSERT</strong> - Insert data into a table</p>
+            <pre><code>INSERT value1, value2</code></pre>
+            <p><strong>UPDATE</strong> - Update existing data within a table</p>
+            <pre><code>UPDATE {column1} = value1, {column2} = value2 + WHERE</code></pre>
+            <p><strong>DELETE</strong> - Delete data from a table</p>
+            <pre><code>DELETE + WHERE</code></pre>
+
+            <p><strong>WHERE</strong> - Filter data from a table</p>
+            <pre><code>WHERE {column} = condition;</code></pre>
+            <pre><code>WHERE {column} LIKE 'condition%';</code></pre>
+            <pre><code>Use % as a placeholder for the remaining characters;</code></pre>
+
+        </div>
+    </div>
+
     <div id="forms">
+        
         <form id="querie-form">
+            <legend>Querie Form</legend>
             <label for="operation">Operation</label>
             <select id="operation" name="operation">
                 <option value="select">Select</option>
@@ -37,6 +59,7 @@
             <input type="submit" value="submit-querie">
         </form>
         <form id="create-form">
+            <legend>Create/Drop Table Form</legend>
             <select id="operation" name="operation">
                 <option value="create">Create</option>
                 <option value="drop">Drop</option>
