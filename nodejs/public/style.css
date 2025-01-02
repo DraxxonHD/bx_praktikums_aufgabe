@@ -32,6 +32,16 @@
     --th-background-color: #4CAF50;
     --th-color: white;
     --tr-odd-background-color: rgb(227, 227, 227);
+    --guide-border: 1px solid #ccc;
+    --guide-border-radius: 5px;
+    --guide-margin: 10px 0;
+    --guide-padding: 10px;
+    --collapsible-background-color: #f1f1f1;
+    --collapsible-color: #444;
+    --collapsible-padding: 10px;
+    --collapsible-font-size: 15px;
+    --guide-content-padding: 18px;
+    --guide-content-background-color: #f9f9f9;
 }
 
 body {
@@ -130,4 +140,23 @@ td {
 
 tr:nth-child(2n-1) {
     background-color: var(--tr-odd-background-color);
+}
+
+/* Info card styling */
+#guide {
+    border: var(--guide-border);
+    border-radius: var(--guide-border-radius);
+    margin: var(--guide-margin);
+    padding: var(--guide-padding);
+}
+
+#guide > button {
+    float: right;
+}
+
+#guide-content {
+    padding: var(--guide-content-padding);
+    display: none;
+    overflow: hidden;
+    background-color: var(--guide-content-background-color);
 }

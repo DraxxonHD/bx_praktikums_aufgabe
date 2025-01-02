@@ -1,6 +1,5 @@
 // import needed packages
 const express = require("express");
-const cors = require("cors");
 const app = express();
 const port = 5000;
 const path = require("path");
@@ -10,31 +9,8 @@ const CDataBase = require("./sqlite.js");
 
 // make public folder
 app.use(express.static(path.join(__dirname, "..", "public")), express.json());
-// for root
+
 app.get("/", (req, res) => {
-  res.send("Hello Worlds!");
-});
-
-// set restrictions
-const middle = express.urlencoded({
-  extended: false,
-  limit: 10000,
-  parameterLimit: 3,
-});
-
-app.post("/form/upload", middle, (req, res) => {
-  var newObj = JSON.parse(JSON.stringify(req.body));
-  // console.log(newObj.name);
-  console.log(req.body);
-  var path = "../uploads/array.json";
-  MyFunctions.PushMyJsonFile(path, newObj);
-});
-
-app.get("/form", (req, res) => {
-  MyFunctions.ReadMyFile(res, "../public/form.html");
-});
-
-app.get("/sql", (req, res) => {
   MyFunctions.ReadMyFile(res, "../public/sqlite.html");
 });
 
@@ -93,10 +69,12 @@ app.post(
     console.log(Object);
     const db = new CDataBase("../database/test.db");
     let where = "";
-    // format the where clause
-    for (x of req.body.where) {
-      if (x.value != "") {
-        where += `${x.name} ${x.value}`;
+    // format the where clause if it exists
+    if (req.body.where) {
+      for (x of req.body.where) {
+        if (x.value != "") {
+          where += `${x.name} ${x.value}`;
+        }
       }
     }
 
