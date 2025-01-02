@@ -1,20 +1,25 @@
 :root {
+    /* general */
     --background-color: #f4f4f4;
     --font-family: Arial, sans-serif;
     --text-color: #333;
+    /* form */
     --form-background-color: #fff;
     --form-padding: 20px;
     --form-margin: 20px auto;
     --form-border-radius: 8px;
     --form-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     --form-max-width: 600px;
+    /* labels */
     --label-width: 75px;
     --label-margin-top: 10px;
+    /* inputs */
     --input-width: calc(100% - 80px);
     --input-padding: 8px;
     --input-margin: 10px 0;
     --input-border: 1px solid #ccc;
     --input-border-radius: 4px;
+    /* buttons */
     --button-background-color: #4CAF50;
     --button-color: white;
     --button-padding: 10px 20px;
@@ -22,6 +27,7 @@
     --button-border-radius: 4px;
     --button-margin-top: 10px;
     --button-hover-background-color: #45a049;
+    /* table */
     --table-width: 100%;
     --table-margin: 20px auto;
     --table-background-color: #fff;
@@ -29,23 +35,26 @@
     --table-font-size: 20px;
     --table-text-align: center;
     --table-padding: 10px;
+    /* table header */
     --th-background-color: #4CAF50;
     --th-color: white;
     --tr-odd-background-color: rgb(227, 227, 227);
+    /* guide */
     --guide-border: 1px solid #ccc;
     --guide-border-radius: 5px;
     --guide-margin: 10px 0;
     --guide-padding: 10px;
+    /* collapsible */
     --collapsible-background-color: #f1f1f1;
     --collapsible-color: #444;
     --collapsible-padding: 10px;
     --collapsible-font-size: 15px;
+    /* guide content */
     --guide-content-padding: 18px;
     --guide-content-background-color: #f9f9f9;
 }
 
 body {
-    /* background-color: grey; */
     box-sizing: content-box;
     text-align: left;
     font-family: var(--font-family);
@@ -142,7 +151,7 @@ tr:nth-child(2n-1) {
     background-color: var(--tr-odd-background-color);
 }
 
-/* Info card styling */
+/* User guide styling */
 #guide {
     border: var(--guide-border);
     border-radius: var(--guide-border-radius);
