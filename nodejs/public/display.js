@@ -117,29 +117,29 @@ async function SendQueryData(event) {
       console.log(error);
       alert("Error formating data" + error);
     });
-  switch (FormDataObj.operation) {
+    console.log("SWITCH");
+  switch (Data.operation) {
     case "select":
-      delete FormDataObj.values;
-      delete FormDataObj.update;
-      delete FormDataObj.insert;
-      delete FormDataObj.delete;
-
+      delete Data.values;
+      delete Data.update;
+      delete Data.insert;
+      delete Data.delete;
       break;
     case "insert":
-      delete FormDataObj.select;
-      delete FormDataObj.update;
-      delete FormDataObj.delete;
-      delete FormDataObj.where;
+      delete Data.select;
+      delete Data.update;
+      delete Data.delete;
+      delete Data.where;
       break;
     case "update":
-      delete FormDataObj.select;
-      delete FormDataObj.values;
-      delete FormDataObj.delete;
+      delete Data.select;
+      delete Data.values;
+      delete Data.delete;
       break;
     case "delete":
-      delete FormDataObj.select;
-      delete FormDataObj.values;
-      delete FormDataObj.update;
+      delete Data.select;
+      delete Data.values;
+      delete Data.update;
       break;
     default:
       break;
