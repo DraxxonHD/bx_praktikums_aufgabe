@@ -17,16 +17,11 @@ async function AddColumn(event) {
   const column_count =
     document.getElementById("columns-to-add").childElementCount - 1;
   // declare options to choose from
-  const sql_data_types = ["TEXT", "INTEGER", "REAL", "BLOB", "NULL"];
+  const sql_data_types = ["TEXT", "INTEGER"];
   const sql_constraints = [
     "PRIMARY KEY",
     "NOT NULL",
-    "UNIQUE",
-    "CHECK",
-    "DEFAULT",
-    "COLLATE",
     "FOREIGN KEY",
-    "AUTOINCREMENT",
   ];
   // prevent the default form submission
   event.preventDefault();
